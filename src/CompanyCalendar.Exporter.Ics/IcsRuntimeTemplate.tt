@@ -1,0 +1,39 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+BEGIN:VCALENDAR
+PRODID:-//<#= this.ProductId #>//JA
+VERSION:2.0
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:<#= this.CalendarName #>
+X-WR-TIMEZONE:Asia/Tokyo
+BEGIN:VTIMEZONE
+TZID:Asia/Tokyo
+X-LIC-LOCATION:Asia/Tokyo
+BEGIN:STANDARD
+TZOFFSETFROM:+0900
+TZOFFSETTO:+0900
+TZNAME:JST
+DTSTART:19700101T000000
+END:STANDARD
+END:VTIMEZONE
+
+<# foreach ((DateTime lowerDate, DateTime upperDate, string summary) in this.EventPairs){ #>
+
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:<#= lowerDate.ToString("yyyyMMdd") #>
+DTEND;VALUE=DATE:<#= upperDate.ToString("yyyyMMdd") #>
+DTSTAMP:<#= this.Timestamp #>
+CREATED:<#= this.Timestamp #>
+LAST-MODIFIED:<#= this.Timestamp #>
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:<#= summary #>
+TRANSP:OPAQUE
+END:VEVENT
+<# } #>
+
+END:VCALENDAR
