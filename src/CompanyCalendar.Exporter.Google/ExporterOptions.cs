@@ -2,6 +2,8 @@
 {
     public class ExporterOptions
     {
+        public static readonly string Key = "GoogleCalendarExporter";
+
         public CredentialKind CredentialKind { get; set; } = CredentialKind.OAuth;
 
         public string ApplicationName { get; set; } = null!;
