@@ -13,7 +13,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompanyCalendar.Importer.Cs
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompanyCalendar.Tests", "CompanyCalendar.Tests\CompanyCalendar.Tests.csproj", "{D8CBFBD8-C65F-4016-A851-0D6DCCEC9123}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompanyCalendar.Importer.MsSql", "CompanyCalendar.Importer.MsSql\CompanyCalendar.Importer.MsSql.csproj", "{D1B3DE65-7BF3-41D3-B047-2938861F211E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompanyCalendar.Importer.MsSql", "CompanyCalendar.Importer.MsSql\CompanyCalendar.Importer.MsSql.csproj", "{D1B3DE65-7BF3-41D3-B047-2938861F211E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ソリューション項目", "ソリューション項目", "{F3FFA852-3C3A-4724-8B2E-850B7143BA2D}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		..\.gitignore = ..\.gitignore
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompanyCalendar.App.WinForms", "CompanyCalendar.App.WinForms\CompanyCalendar.App.WinForms.csproj", "{F05BE555-A08C-49EC-8CF2-85C5C41FE58F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompanyCalendar.Hosting.WinForms", "CompanyCalendar.Hosting.WinForms\CompanyCalendar.Hosting.WinForms.csproj", "{D773EF9C-14E2-49BE-AE12-B3A00CA391A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +57,14 @@ Global
 		{D1B3DE65-7BF3-41D3-B047-2938861F211E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1B3DE65-7BF3-41D3-B047-2938861F211E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1B3DE65-7BF3-41D3-B047-2938861F211E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F05BE555-A08C-49EC-8CF2-85C5C41FE58F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F05BE555-A08C-49EC-8CF2-85C5C41FE58F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F05BE555-A08C-49EC-8CF2-85C5C41FE58F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F05BE555-A08C-49EC-8CF2-85C5C41FE58F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D773EF9C-14E2-49BE-AE12-B3A00CA391A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D773EF9C-14E2-49BE-AE12-B3A00CA391A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D773EF9C-14E2-49BE-AE12-B3A00CA391A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D773EF9C-14E2-49BE-AE12-B3A00CA391A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
