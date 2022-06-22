@@ -24,4 +24,10 @@
     <ProjectReference Include="..\CompanyCalendar.Importer.Csv\CompanyCalendar.Importer.Csv.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
