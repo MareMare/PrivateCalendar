@@ -7,6 +7,7 @@ using Xunit;
 
 namespace CompanyCalendar.Tests.Exporter.Google
 {
+    [Trait("Category", "local")]
     public class CalendarExporterUnitTest
     {
         private readonly IConfiguration _config;
