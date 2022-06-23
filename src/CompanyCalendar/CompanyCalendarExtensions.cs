@@ -1,9 +1,9 @@
 ﻿namespace CompanyCalendar
 {
     /// <summary>
-    /// <see cref="HolidayKind"/> 列挙体の拡張メソッドを提供します。
+    /// 拡張メソッドを提供します。
     /// </summary>
-    public static class HolidayExtensions
+    public static class CompanyCalendarExtensions
     {
         public static bool IsHoliday(this HolidayKind kind) =>
             kind switch
