@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 
 namespace CompanyCalendar.Importer.Csv
 {
-    public class CsvLoader : IHolidaysLoader
+    public class CsvLoader : ICsvLoader
     {
         private readonly CsvLoaderOptions _options;
 
@@ -16,17 +16,16 @@ namespace CompanyCalendar.Importer.Csv
         {
             ArgumentNullException.ThrowIfNull(options);
             ArgumentNullException.ThrowIfNull(options.Value);
-            ArgumentNullException.ThrowIfNull(options.Value.FilePath);
 
             this._options = options.Value;
         }
 
         public async IAsyncEnumerable<HolidayItem> LoadAsync(
+            string csvFilePath,
             DateTime? lowerDate = null,
             DateTime? upperDate = null,
             [EnumeratorCancellation] CancellationToken taskCancellationToken = default)
         {
-            var path = this._options.FilePath;
             var encoding = this._options.FileEncoding;
             var csvConfig = new CsvConfiguration(CultureInfo.CurrentCulture)
             {
@@ -37,7 +36,7 @@ namespace CompanyCalendar.Importer.Csv
                 // NOTE: [c\# \- How to ignore empty rows in CSV when reading \- Stack Overflow](https://stackoverflow.com/a/57994196)
             };
 
-            await using var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            await using var stream = File.Open(csvFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             using var reader = new StreamReader(stream, encoding);
             using var csv = new CsvReader(reader, csvConfig);
             await foreach (var record in csv.GetRecordsAsync<HolidayItemRecord>(taskCancellationToken).ConfigureAwait(false))

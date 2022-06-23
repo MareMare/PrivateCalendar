@@ -2,26 +2,25 @@
 
 namespace CompanyCalendar.Exporter.Ics
 {
-    public class CalendarExporter : ICalendarExporter
+    public class IcsExporter : IIcsExporter
     {
-        private readonly ExporterOptions _options;
+        private readonly IcsExporterOptions _options;
 
-        public CalendarExporter(IOptions<ExporterOptions> options)
+        public IcsExporter(IOptions<IcsExporterOptions> options)
         {
             ArgumentNullException.ThrowIfNull(options);
             ArgumentNullException.ThrowIfNull(options.Value);
-            ArgumentNullException.ThrowIfNull(options.Value.FilePath);
 
             this._options = options.Value;
         }
 
-        public async Task ExportAsync(IEnumerable<(DateTime date, string summary)> eventPairs, CancellationToken taskCancellationToken = default)
+        public async Task ExportAsync(string icsFilePath, IEnumerable<(DateTime date, string summary)> eventPairs, CancellationToken taskCancellationToken = default)
         {
             // [asp\.net \- How to create \.ics file using c\#? \- Stack Overflow](https://stackoverflow.com/questions/46033843/how-to-create-ics-file-using-c/46042482#46042482)
             var generator = new IcsRuntimeTemplate
             {
-                CalendarName = "HSC 社内カレンダー",
-                ProductId = "hsw.co.jp",
+                CalendarName = this._options.CalendarName,
+                ProductId = this._options.ProductId,
                 EventPairs = eventPairs
                     .Select(pair =>
                         (loweDate: pair.date, upperDate: pair.date.ToNextDay(), pair.summary))
@@ -29,7 +28,7 @@ namespace CompanyCalendar.Exporter.Ics
             };
             var ics = generator.TransformText();
 
-            var path = this._options.FilePath;
+            var path = icsFilePath;
             var encoding = this._options.FileEncoding;
             //await File.WriteAllTextAsync(path, ics, encoding, taskCancellationToken).ConfigureAwait(false);
             await using var stream = File.Open(path, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);

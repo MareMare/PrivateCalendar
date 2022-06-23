@@ -8,7 +8,7 @@ namespace CompanyCalendar.Tests.Exporter.Google
         [Fact]
         public void ExporterOptions_Ctor_Test1()
         {
-            var actual = new ExporterOptions();
+            var actual = new CalendarExporterOptions();
             Assert.Equal(CredentialKind.OAuth, actual.CredentialKind);
             Assert.Null(actual.ApplicationName);
             Assert.Null(actual.CalendarId);

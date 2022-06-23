@@ -2,7 +2,7 @@
 
 namespace CompanyCalendar.Importer.MsSql
 {
-    public class DbLoader : IHolidaysLoader
+    public class DbLoader : IDbLoader
     {
         private readonly AppDbContext _dbContext;
 

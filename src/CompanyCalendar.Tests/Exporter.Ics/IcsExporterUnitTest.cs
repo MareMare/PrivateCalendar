@@ -6,19 +6,20 @@ using Xunit;
 
 namespace CompanyCalendar.Tests.Exporter.Ics
 {
-    public class CalendarExporterUnitTest
+    public class IcsExporterUnitTest
     {
         [Fact]
         public async Task Test_Ics_ExportAsync()
         {
-            var options = Options.Create(new ExporterOptions { FilePath = "sample.ics" });
-            var exporter = new CalendarExporter(options);
+            var path = "sample.ics";
+            var options = Options.Create(new IcsExporterOptions { CalendarName = "おためしカレンダー", ProductId = "おためし" });
+            var exporter = new IcsExporter(options);
             var pairs = new[]
             {
                 (DateTime.Today, "HSC でばっぐ１"),
                 (DateTime.Today.ToNextDay(), "HSC デバッグ２"),
             };
-            await exporter.ExportAsync(pairs).ConfigureAwait(false);
+            await exporter.ExportAsync(path, pairs).ConfigureAwait(false);
         }
     }
 }

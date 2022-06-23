@@ -1,5 +1,9 @@
+using System.Reflection;
+using CompanyCalendar.Exporter.Google;
+using CompanyCalendar.Exporter.Ics;
 using CompanyCalendar.Hosting.WinForms;
 using CompanyCalendar.Importer.Csv;
+using CompanyCalendar.Importer.MsSql;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -22,19 +26,19 @@ namespace CompanyCalendar.App.WinForms
 
         private static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureServices((context, services) =>
-                    services.AddConfiguredServices(context.Configuration, context.HostingEnvironment));
+                .ConfigureServices((hostingContext, services) =>
+                    services.AddConfiguredServices(hostingContext.Configuration, hostingContext.HostingEnvironment));
 
         private static IServiceCollection AddConfiguredServices(
             this IServiceCollection services,
             IConfiguration configuration,
-            IHostEnvironment? environment = null)
+            IHostEnvironment environment)
         {
             return services
-                .Configure<CsvLoaderOptions>(configuration.GetSection(CsvLoaderOptions.Key)) // Option Pattern 1
-                .Configure<CsvLoaderOptions>(CsvLoaderOptions.Key, configuration)            // Option Pattern 2
-                .Configure<CsvLoaderOptions>(options => options.FilePath = "ほげ")           // Option Pattern 3
-                .AddTransient<IHolidaysLoader, CsvLoader>()
+                .AddGoogleExporter(configuration)
+                .AddIcsExporter(configuration)
+                .AddCsvImporter(configuration)
+                .AddMsSqlImporter(configuration, environment)
                 .AddTransient<Form1>();
         }
     }

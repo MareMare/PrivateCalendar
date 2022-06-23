@@ -1,6 +1,6 @@
 ﻿namespace CompanyCalendar.Exporter.Google
 {
-    public class ExporterOptions
+    public class CalendarExporterOptions
     {
         public static readonly string Key = "GoogleCalendarExporter";
 

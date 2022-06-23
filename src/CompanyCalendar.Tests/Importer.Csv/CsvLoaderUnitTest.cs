@@ -22,11 +22,12 @@ namespace CompanyCalendar.Tests.Importer.Csv
         [Fact]
         public async Task LoadAsync_ValidFileTest()
         {
-            var options = Options.Create(new CsvLoaderOptions { FilePath = "Sample.csv" });
+            var path = "Sample.csv";
+            var options = Options.Create(new CsvLoaderOptions());
             var loader = new CsvLoader(options);
 
             var items = new List<HolidayItem>();
-            await foreach (var item in loader.LoadAsync().ConfigureAwait(false))
+            await foreach (var item in loader.LoadAsync(path).ConfigureAwait(false))
             {
                 Assert.NotNull(item);
                 Assert.NotNull(item.Summary);
@@ -48,9 +49,10 @@ namespace CompanyCalendar.Tests.Importer.Csv
         [MemberData(nameof(LoadAsync_Range_TestDate))]
         public async Task LoadAsync_Range_Test(DateTime? lowerDate, DateTime? upperDate, int? expected)
         {
-            var options = Options.Create(new CsvLoaderOptions { FilePath = "Sample.csv" });
+            var path = "Sample.csv";
+            var options = Options.Create(new CsvLoaderOptions());
             var loader = new CsvLoader(options);
-            var items = await loader.LoadAsync(lowerDate, upperDate).ToListAsync().ConfigureAwait(false);
+            var items = await loader.LoadAsync(path, lowerDate, upperDate).ToListAsync().ConfigureAwait(false);
 
             Assert.Equal(expected, items.Count);
         }
@@ -58,28 +60,31 @@ namespace CompanyCalendar.Tests.Importer.Csv
         [Fact]
         public async Task LoadAsync_NotExistsFileTest1()
         {
-            var options = Options.Create(new CsvLoaderOptions { FilePath = "not_found.csv" });
+            var path = "not_found.csv";
+            var options = Options.Create(new CsvLoaderOptions());
             var loader = new CsvLoader(options);
 
-            var e = loader.LoadAsync().GetAsyncEnumerator();
+            var e = loader.LoadAsync(path).GetAsyncEnumerator();
             var _ = await Assert.ThrowsAsync<FileNotFoundException>(() => e.MoveNextAsync().AsTask());
         }
 
         [Fact]
         public async Task LoadAsync_NotExistsFileTest2()
         {
-            var options = Options.Create(new CsvLoaderOptions { FilePath = "not_found.csv" });
+            var path = "not_found.csv";
+            var options = Options.Create(new CsvLoaderOptions());
             var loader = new CsvLoader(options);
-            var _ = await Assert.ThrowsAsync<FileNotFoundException>(async () => await loader.LoadAsync().FirstAsync().ConfigureAwait(false));
+            var _ = await Assert.ThrowsAsync<FileNotFoundException>(async () => await loader.LoadAsync(path).FirstAsync().ConfigureAwait(false));
         }
 
         [Fact]
         public async Task Sandbox1()
         {
-            var options = Options.Create(new CsvLoaderOptions { FilePath = "Sample.csv" });
+            var path = "Sample.csv";
+            var options = Options.Create(new CsvLoaderOptions());
             var loader = new CsvLoader(options);
 
-            var loadedItemsMapping = await loader.LoadAsync().ToDictionaryAsync(item => item.Date).ConfigureAwait(false);
+            var loadedItemsMapping = await loader.LoadAsync(path).ToDictionaryAsync(item => item.Date).ConfigureAwait(false);
             var loadedItems = loadedItemsMapping.Values;
 
             var minDateItem = loadedItems.MinBy(item => item.Date);
@@ -138,10 +143,11 @@ namespace CompanyCalendar.Tests.Importer.Csv
         [Fact]
         public async Task Sandbox2()
         {
-            var options = Options.Create(new CsvLoaderOptions { FilePath = "Sample.csv" });
+            var path = "Sample.csv";
+            var options = Options.Create(new CsvLoaderOptions());
             var loader = new CsvLoader(options);
 
-            var loadedItemsMapping = await loader.LoadAsync().ToDictionaryAsync(item => item.Date).ConfigureAwait(false);
+            var loadedItemsMapping = await loader.LoadAsync(path).ToDictionaryAsync(item => item.Date).ConfigureAwait(false);
 
             var loadedItems = loadedItemsMapping.Values;
             var minDateItem = loadedItems.MinBy(item => item.Date);

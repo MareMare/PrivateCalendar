@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using CompanyCalendar.Exporter.Google;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Xunit;
 
 namespace CompanyCalendar.Tests.Exporter.Google
@@ -31,10 +32,10 @@ namespace CompanyCalendar.Tests.Exporter.Google
         [Fact]
         public async Task Test_Google_ExportAsync()
         {
-            var options = this._config.Get<ExporterOptions>();
+            var options = this._config.Get<CalendarExporterOptions>();
             options.CredentialKind = CredentialKind.ServiceAccount;
 
-            var exporter = new CalendarExporter(options);
+            var exporter = new CalendarExporter(Options.Create(options));
             var pairs = new[]
             {
                 (DateTime.Today, "HSC Debug"),

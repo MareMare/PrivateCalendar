@@ -3,6 +3,7 @@ using Google.Apis.Auth.OAuth2;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
 using Google.Apis.Services;
+using Microsoft.Extensions.Options;
 
 namespace CompanyCalendar.Exporter.Google
 {
@@ -10,17 +11,20 @@ namespace CompanyCalendar.Exporter.Google
     {
         private static readonly string[] Scopes = { CalendarService.Scope.Calendar, CalendarService.Scope.CalendarReadonly };
 
-        private readonly ExporterOptions _options;
+        private const string TzId = "Asia/Tokyo";
 
-        public CalendarExporter(ExporterOptions options)
+        private readonly CalendarExporterOptions _options;
+
+        public CalendarExporter(IOptions<CalendarExporterOptions> options)
         {
             ArgumentNullException.ThrowIfNull(options);
-            this._options = options;
+            ArgumentNullException.ThrowIfNull(options.Value);
+            
+            this._options = options.Value;
         }
 
         public async Task ExportAsync(IEnumerable<(DateTime date, string summary)> eventPairs, CancellationToken taskCancellationToken = default)
         {
-throw new NotImplementedException();
             using var service = await CreateCalendarServiceAsync(taskCancellationToken);
             foreach ((DateTime date, string summary) in eventPairs)
             {
@@ -45,8 +49,8 @@ throw new NotImplementedException();
             var eventItem = new Event
             {
                 Summary = summary,
-                Start = new EventDateTime { Date = $"{eventDateTime.Date:yyyy-MM-dd}", TimeZone = "Asia/Tokyo", },
-                End = new EventDateTime { Date = $"{eventDateTime.Date:yyyy-MM-dd}", TimeZone = "Asia/Tokyo", },
+                Start = new EventDateTime { Date = $"{eventDateTime.Date:yyyy-MM-dd}", TimeZone = TzId, },
+                End = new EventDateTime { Date = $"{eventDateTime.Date:yyyy-MM-dd}", TimeZone = TzId, },
             };
             return eventItem;
         }
@@ -54,8 +58,8 @@ throw new NotImplementedException();
         private static void UpdateEvent(Event eventItem, DateTime eventDateTime, string summary)
         {
             eventItem.Summary = summary;
-            eventItem.Start = new EventDateTime { Date = $"{eventDateTime.Date:yyyy-MM-dd}", TimeZone = "Asia/Tokyo", };
-            eventItem.End = new EventDateTime { Date = $"{eventDateTime.Date:yyyy-MM-dd}", TimeZone = "Asia/Tokyo", };
+            eventItem.Start = new EventDateTime { Date = $"{eventDateTime.Date:yyyy-MM-dd}", TimeZone = TzId, };
+            eventItem.End = new EventDateTime { Date = $"{eventDateTime.Date:yyyy-MM-dd}", TimeZone = TzId, };
         }
 
         private async Task<CalendarService> CreateCalendarServiceAsync(CancellationToken taskCancellationToken = default)

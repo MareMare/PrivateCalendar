@@ -1,14 +1,34 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace CompanyCalendar
+﻿namespace CompanyCalendar
 {
-    public interface IHolidaysLoader
+    public interface ICsvLoader
     {
-        IAsyncEnumerable<HolidayItem> LoadAsync(DateTime? lowerDate = null, DateTime? upperDate = null, CancellationToken taskCancellationToken = default);
+        IAsyncEnumerable<HolidayItem> LoadAsync(
+            string csvFilePath,
+            DateTime? lowerDate = null,
+            DateTime? upperDate = null,
+            CancellationToken taskCancellationToken = default);
+    }
+
+    public interface IDbLoader
+    {
+        IAsyncEnumerable<HolidayItem> LoadAsync(
+            DateTime? lowerDate = null,
+            DateTime? upperDate = null,
+            CancellationToken taskCancellationToken = default);
+    }
+
+    public interface IIcsExporter
+    {
+        Task ExportAsync(
+            string icsFilePath,
+            IEnumerable<(DateTime date, string summary)> eventPairs,
+            CancellationToken taskCancellationToken = default);
     }
 
     public interface ICalendarExporter
     {
-        Task ExportAsync(IEnumerable<(DateTime date, string summary)> eventPairs, CancellationToken taskCancellationToken = default);
+        Task ExportAsync(
+            IEnumerable<(DateTime date, string summary)> eventPairs,
+            CancellationToken taskCancellationToken = default);
     }
 }

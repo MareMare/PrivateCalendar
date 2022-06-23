@@ -2,12 +2,14 @@
 
 namespace CompanyCalendar.Exporter.Ics
 {
-    public class ExporterOptions
+    public class IcsExporterOptions
     {
         public static readonly string Key = "IcsExporter";
 
-        public string FilePath { get; set; } = null!;
-
         public Encoding FileEncoding { get; set; } = Encoding.UTF8;
+
+        public string ProductId { get; set; } = null!;
+
+        public string CalendarName { get; set; } = null!;
     }
 }
