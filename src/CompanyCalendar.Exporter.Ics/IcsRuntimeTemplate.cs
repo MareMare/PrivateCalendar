@@ -18,7 +18,7 @@ namespace CompanyCalendar.Exporter.Ics
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "C:\Users\maref\Documents\GitHub\MareMare\PrivateCalendarImporter\src\CompanyCalendar.Exporter.Ics\IcsRuntimeTemplate.tt"
+    #line 1 "C:\Users\maref\Documents\GitHub\MareMare\PrivateCalendar\src\CompanyCalendar.Exporter.Ics\IcsRuntimeTemplate.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")]
     public partial class IcsRuntimeTemplate : IcsRuntimeTemplateBase
     {
@@ -30,14 +30,14 @@ namespace CompanyCalendar.Exporter.Ics
         {
             this.Write("BEGIN:VCALENDAR\r\nPRODID:-//");
             
-            #line 7 "C:\Users\maref\Documents\GitHub\MareMare\PrivateCalendarImporter\src\CompanyCalendar.Exporter.Ics\IcsRuntimeTemplate.tt"
+            #line 7 "C:\Users\maref\Documents\GitHub\MareMare\PrivateCalendar\src\CompanyCalendar.Exporter.Ics\IcsRuntimeTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.ProductId));
             
             #line default
             #line hidden
             this.Write("//JA\r\nVERSION:2.0\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nX-WR-CALNAME:");
             
-            #line 11 "C:\Users\maref\Documents\GitHub\MareMare\PrivateCalendarImporter\src\CompanyCalendar.Exporter.Ics\IcsRuntimeTemplate.tt"
+            #line 11 "C:\Users\maref\Documents\GitHub\MareMare\PrivateCalendar\src\CompanyCalendar.Exporter.Ics\IcsRuntimeTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.CalendarName));
             
             #line default
@@ -46,56 +46,56 @@ namespace CompanyCalendar.Exporter.Ics
                     "/Tokyo\r\nBEGIN:STANDARD\r\nTZOFFSETFROM:+0900\r\nTZOFFSETTO:+0900\r\nTZNAME:JST\r\nDTSTAR" +
                     "T:19700101T000000\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\n\r\n");
             
-            #line 24 "C:\Users\maref\Documents\GitHub\MareMare\PrivateCalendarImporter\src\CompanyCalendar.Exporter.Ics\IcsRuntimeTemplate.tt"
+            #line 24 "C:\Users\maref\Documents\GitHub\MareMare\PrivateCalendar\src\CompanyCalendar.Exporter.Ics\IcsRuntimeTemplate.tt"
  foreach ((DateTime lowerDate, DateTime upperDate, string summary) in this.EventPairs){ 
             
             #line default
             #line hidden
             this.Write("\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:");
             
-            #line 27 "C:\Users\maref\Documents\GitHub\MareMare\PrivateCalendarImporter\src\CompanyCalendar.Exporter.Ics\IcsRuntimeTemplate.tt"
+            #line 27 "C:\Users\maref\Documents\GitHub\MareMare\PrivateCalendar\src\CompanyCalendar.Exporter.Ics\IcsRuntimeTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(lowerDate.ToString("yyyyMMdd")));
             
             #line default
             #line hidden
             this.Write("\r\nDTEND;VALUE=DATE:");
             
-            #line 28 "C:\Users\maref\Documents\GitHub\MareMare\PrivateCalendarImporter\src\CompanyCalendar.Exporter.Ics\IcsRuntimeTemplate.tt"
+            #line 28 "C:\Users\maref\Documents\GitHub\MareMare\PrivateCalendar\src\CompanyCalendar.Exporter.Ics\IcsRuntimeTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(upperDate.ToString("yyyyMMdd")));
             
             #line default
             #line hidden
             this.Write("\r\nDTSTAMP:");
             
-            #line 29 "C:\Users\maref\Documents\GitHub\MareMare\PrivateCalendarImporter\src\CompanyCalendar.Exporter.Ics\IcsRuntimeTemplate.tt"
+            #line 29 "C:\Users\maref\Documents\GitHub\MareMare\PrivateCalendar\src\CompanyCalendar.Exporter.Ics\IcsRuntimeTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.Timestamp));
             
             #line default
             #line hidden
             this.Write("\r\nCREATED:");
             
-            #line 30 "C:\Users\maref\Documents\GitHub\MareMare\PrivateCalendarImporter\src\CompanyCalendar.Exporter.Ics\IcsRuntimeTemplate.tt"
+            #line 30 "C:\Users\maref\Documents\GitHub\MareMare\PrivateCalendar\src\CompanyCalendar.Exporter.Ics\IcsRuntimeTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.Timestamp));
             
             #line default
             #line hidden
             this.Write("\r\nLAST-MODIFIED:");
             
-            #line 31 "C:\Users\maref\Documents\GitHub\MareMare\PrivateCalendarImporter\src\CompanyCalendar.Exporter.Ics\IcsRuntimeTemplate.tt"
+            #line 31 "C:\Users\maref\Documents\GitHub\MareMare\PrivateCalendar\src\CompanyCalendar.Exporter.Ics\IcsRuntimeTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.Timestamp));
             
             #line default
             #line hidden
             this.Write("\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:");
             
-            #line 34 "C:\Users\maref\Documents\GitHub\MareMare\PrivateCalendarImporter\src\CompanyCalendar.Exporter.Ics\IcsRuntimeTemplate.tt"
+            #line 34 "C:\Users\maref\Documents\GitHub\MareMare\PrivateCalendar\src\CompanyCalendar.Exporter.Ics\IcsRuntimeTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(summary));
             
             #line default
             #line hidden
             this.Write("\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\n");
             
-            #line 37 "C:\Users\maref\Documents\GitHub\MareMare\PrivateCalendarImporter\src\CompanyCalendar.Exporter.Ics\IcsRuntimeTemplate.tt"
+            #line 37 "C:\Users\maref\Documents\GitHub\MareMare\PrivateCalendar\src\CompanyCalendar.Exporter.Ics\IcsRuntimeTemplate.tt"
  } 
             
             #line default
