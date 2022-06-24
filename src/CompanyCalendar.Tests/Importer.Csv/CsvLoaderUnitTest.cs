@@ -78,134 +78,24 @@ namespace CompanyCalendar.Tests.Importer.Csv
         }
 
         [Fact]
-        public async Task Sandbox1()
+        public async Task Sandbox()
         {
             var path = "Sample.csv";
             var options = Options.Create(new CsvLoaderOptions());
             var loader = new CsvLoader(options);
 
             var loadedItemsMapping = await loader.LoadAsync(path).ToDictionaryAsync(item => item.Date).ConfigureAwait(false);
-            var loadedItems = loadedItemsMapping.Values;
-
-            var minDateItem = loadedItems.MinBy(item => item.Date);
-            var maxDateItem = loadedItems.MaxBy(item => item.Date);
-            var lowerDate = minDateItem?.Date.ToFirstDayInMonth();
-            var upperDate = maxDateItem?.Date.ToLastDayInMonth();
+            var lowerDate = loadedItemsMapping.Keys.Min().ToFirstDayInMonth();
+            var upperDate = loadedItemsMapping.Keys.Max().ToLastDayInMonth();
 
             Assert.Equal(DateTime.Parse("2022/04/01"), lowerDate);
             Assert.Equal(DateTime.Parse("2023/03/31"), upperDate);
 
-            foreach (var calendar in lowerDate.YieldDates(upperDate))
+            var query = loadedItemsMapping.ToIrregularPairs(lowerDate, upperDate);
+            foreach (var pair in query)
             {
-                (bool isIrregular, HolidayKind? kind, string? summary) = IsIrregular(calendar);
-                if (isIrregular)
-                {
-                    _testOutputHelper.WriteLine($"date={calendar:yyyy/MM/dd} kind={kind} summary={summary}");
-                    Assert.NotNull(kind);
-                }
-            }
-
-            (bool isIrregular, HolidayKind? kind, string? summary) IsIrregular(DateTime calendar)
-            {
-                // ----------------------------------------
-                // ƒJƒŒƒ“ƒ_   ‹x“úİ’è  ”»’è      •s’èŠúH
-                // ----------------------------------------
-                // •½“ú       ‚È‚µ      o‹Î“ú    ‚¢‚¢‚¦
-                // •½“ú       ‹x“ú      ‹x“ú      ‚Í‚¢
-                // •½“ú       j“ú      ‹x“ú      ‚¢‚¢‚¦
-                // •½“ú       —L‹‹      ‹x“ú      ‚¢‚¢‚¦
-                // ----------------------------------------
-                // T––       ‚È‚µ      o‹Î“ú    ‚Í‚¢
-                // T––       ‚ ‚è      ‹x“ú      ‚¢‚¢‚¦
-                // ----------------------------------------
-                var isWeekend = calendar.IsWeekend();
-                var holidayItem = loadedItemsMapping.TryGetValue(calendar, out var item) ? item : null;
-
-                if (!isWeekend)
-                {
-                    if (holidayItem?.Kind == HolidayKind.Kyujitsu)
-                    {
-                        return (true, holidayItem.Kind, holidayItem.Summary);
-                    }
-                }
-                else
-                {
-                    if (holidayItem == null)
-                    {
-                        return (true, HolidayKind.Shukkimbi, null);
-                    }
-                }
-
-                return (false, null, null);
+                _testOutputHelper.WriteLine($"Date={pair.Date:yyyy/MM/dd} IrregularKind={pair.IrregularKind}");
             }
         }
-
-        [Fact]
-        public async Task Sandbox2()
-        {
-            var path = "Sample.csv";
-            var options = Options.Create(new CsvLoaderOptions());
-            var loader = new CsvLoader(options);
-
-            var loadedItemsMapping = await loader.LoadAsync(path).ToDictionaryAsync(item => item.Date).ConfigureAwait(false);
-
-            var loadedItems = loadedItemsMapping.Values;
-            var minDateItem = loadedItems.MinBy(item => item.Date);
-            var maxDateItem = loadedItems.MaxBy(item => item.Date);
-            var lowerDate = minDateItem?.Date.ToFirstDayInMonth();
-            var upperDate = maxDateItem?.Date.ToLastDayInMonth();
-
-            var query = lowerDate.YieldDates(upperDate)
-                .Select(calendar =>
-                {
-                    var holidayItem = loadedItemsMapping.TryGetValue(calendar, out var item) ? item : null;
-                    var irregularKind = IsIrregular(calendar, holidayItem);
-                    return new
-                    {
-                        Date = calendar,
-                        IsWeekend = calendar.IsWeekend(),
-                        holidayItem?.Kind,
-                        IrregularKind = irregularKind,
-                    };
-                })
-                .Where(pair => pair.IrregularKind != null)
-                .ToArray();
-            foreach (var item in query)
-            {
-                _testOutputHelper.WriteLine($"Date={item.Date:yyyy/MM/dd} IsWeekend={item.IsWeekend} Kind={item.Kind} IrregularKind={item.IrregularKind}");
-            }
-
-            static HolidayKind? IsIrregular(DateTime calendar, HolidayItem? holidayItem)
-            {
-                // ----------------------------------------
-                // ƒJƒŒƒ“ƒ_   ‹x“úİ’è  ”»’è      •s’èŠúH
-                // ----------------------------------------
-                // •½“ú       ‚È‚µ      o‹Î“ú    ‚¢‚¢‚¦
-                // •½“ú       ‹x“ú      ‹x“ú      ‚Í‚¢
-                // •½“ú       j“ú      ‹x“ú      ‚¢‚¢‚¦
-                // •½“ú       —L‹‹      ‹x“ú      ‚Í‚¢
-                // ----------------------------------------
-                // T––       ‚È‚µ      o‹Î“ú    ‚Í‚¢
-                // T––       ‚ ‚è      ‹x“ú      ‚¢‚¢‚¦
-                // ----------------------------------------
-                var isWeekend = calendar.IsWeekend();
-                if (!isWeekend)
-                {
-                    return holidayItem?.Kind switch
-                    {
-                        HolidayKind.Kyujitsu => HolidayKind.Kyujitsu,
-                        HolidayKind.YukyuKijumbi => HolidayKind.YukyuKijumbi,
-                        _ => null,
-                    };
-                }
-
-                if (holidayItem == null)
-                {
-                    return HolidayKind.Shukkimbi;
-                }
-
-                return null;
-            }
-        }
-    }
+   }
 }
