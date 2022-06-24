@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace CompanyCalendar.Tests
@@ -74,10 +75,10 @@ namespace CompanyCalendar.Tests
 
         public static IEnumerable<object?[]> HolidayKind_ToEventSummary_TestData()
         {
-            yield return new object?[] { HolidayKind.Shukkimbi, "HSC出勤日", };
-            yield return new object?[] { HolidayKind.Kyujitsu, "HSC休日", };
+            yield return new object?[] { HolidayKind.Shukkimbi, "出勤日", };
+            yield return new object?[] { HolidayKind.Kyujitsu, "休日", };
             yield return new object?[] { HolidayKind.Shukujitsu, null, };
-            yield return new object?[] { HolidayKind.YukyuKijumbi, "HSC夏季休暇", };
+            yield return new object?[] { HolidayKind.YukyuKijumbi, "夏季休暇", };
             yield return new object?[] { null, null, };
         }
 
@@ -87,6 +88,80 @@ namespace CompanyCalendar.Tests
         {
             var actual = kind?.ToEventSummary();
             Assert.Equal(expected, actual);
+        }
+
+        public static IEnumerable<object?[]> HolidayKind_ToEventSummaryWithPrefix_TestData()
+        {
+            var prefix = "PREFIX_";
+            yield return new object?[] { HolidayKind.Shukkimbi, $"{prefix}出勤日", };
+            yield return new object?[] { HolidayKind.Kyujitsu, $"{prefix}休日", };
+            yield return new object?[] { HolidayKind.Shukujitsu, null, };
+            yield return new object?[] { HolidayKind.YukyuKijumbi, $"{prefix}夏季休暇", };
+            yield return new object?[] { null, null, };
+        }
+
+        [Theory]
+        [MemberData(nameof(HolidayKind_ToEventSummaryWithPrefix_TestData))]
+        public void HolidayKind_ToEventSummaryWithPrefix_Test(HolidayKind? kind, string? expected)
+        {
+            var actual = kind?.ToEventSummary("PREFIX_");
+            Assert.Equal(expected, actual);
+        }
+
+        public static IEnumerable<object?[]> DateTime_IsIrregular_TestData()
+        {
+            static object?[] New(DateTime date, HolidayKind? kind, HolidayKind? irregularKind)
+            {
+                return kind == null
+                    ? new object?[] { date, null, irregularKind } // 休日登録なし
+                    : new object?[]
+                        { date, new HolidayItem { Date = date, Kind = kind.Value }, irregularKind }; // 休日登録あり
+            }
+
+            var weekday = DateTime.Parse("2022/06/06");
+            // 平日：登録＝なし　 → 出勤日、通常
+            yield return New(weekday, null, null);
+            // 平日：登録＝出勤日 → 出勤日、通常
+            yield return New(weekday, HolidayKind.Shukkimbi, null);
+            // 平日：登録＝休日　 → 休日、　不定期
+            yield return New(weekday, HolidayKind.Kyujitsu, HolidayKind.Kyujitsu);
+            // 平日：登録＝祝日　 → 祝日、　通常
+            yield return New(weekday, HolidayKind.Shukujitsu, null);
+            // 平日：登録＝有給　 → 有給、　不定期
+            yield return New(weekday, HolidayKind.YukyuKijumbi, HolidayKind.YukyuKijumbi);
+
+            var weekend = DateTime.Parse("2022/06/11");
+            // 週末：登録＝なし　 → 出勤日、不定期
+            yield return New(weekend, null, HolidayKind.Shukkimbi);
+            // 週末：登録＝出勤日 → 出勤日、不定期
+            yield return New(weekend, HolidayKind.Shukkimbi, HolidayKind.Shukkimbi);
+            // 週末：登録＝休日　 → 休日、　通常
+            yield return New(weekend, HolidayKind.Kyujitsu, null);
+            // 週末：登録＝祝日　 → 祝日、　通常
+            yield return New(weekend, HolidayKind.Shukujitsu, null);
+            // 週末：登録＝有給　 → 有給、　不定期
+            yield return New(weekend, HolidayKind.YukyuKijumbi, HolidayKind.YukyuKijumbi);
+        }
+
+        [Theory]
+        [MemberData(nameof(DateTime_IsIrregular_TestData))]
+        public void DateTime_IsIrregular_Test(DateTime? calendar, HolidayItem? holidayItem, HolidayKind? expected)
+        {
+            var actual = calendar?.IsIrregular(holidayItem);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Items_ToIrregularPairs_Test()
+        {
+            var items = new[]
+            {
+                new HolidayItem { Date = DateTime.Parse("2022/06/06"), Kind = HolidayKind.Kyujitsu },
+            };
+            var pairs = items.ToIrregularPairs();
+
+            Assert.Single(pairs);
+            Assert.Equal(HolidayKind.Kyujitsu, pairs.Single().IrregularKind);
         }
     }
 }
