@@ -1,4 +1,3 @@
-using System.Reflection;
 using CompanyCalendar.Exporter.Google;
 using CompanyCalendar.Exporter.Ics;
 using CompanyCalendar.Hosting.WinForms;
