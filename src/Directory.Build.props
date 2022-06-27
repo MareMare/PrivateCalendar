@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+  <!-- カスタムプロパティ -->
+  <PropertyGroup>
+    <IsTestProject>$(MSBuildProjectName.Contains('Test'))</IsTestProject>
+  </PropertyGroup>
+
+  <!-- コード分析 -->
+  <PropertyGroup Condition=" '!$(IsTestProject)' == 'True' ">
+    <AnalysisLevel>latest-all</AnalysisLevel>
+  </PropertyGroup>
+
+  <!-- StyleCop -->
+  <ItemGroup Condition=" '!$(IsTestProject)' == 'True' ">
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="stylecop.json" />
+  </ItemGroup>
+
+  <!-- ライセンスファイル -->
+  <PropertyGroup Condition=" '!$(IsTestProject)' == 'True' ">
+    <PackageLicenseFile>$(MSBuildThisFileDirectory)LICENSE</PackageLicenseFile>
+  </PropertyGroup>
+
+</Project>
