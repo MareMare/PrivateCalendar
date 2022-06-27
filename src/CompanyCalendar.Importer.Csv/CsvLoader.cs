@@ -36,10 +36,10 @@ namespace CompanyCalendar.Importer.Csv
                 // NOTE: [c\# \- How to ignore empty rows in CSV when reading \- Stack Overflow](https://stackoverflow.com/a/57994196)
             };
 
-            await using var stream = File.Open(csvFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using var stream = File.Open(csvFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             using var reader = new StreamReader(stream, encoding);
             using var csv = new CsvReader(reader, csvConfig);
-            await foreach (var record in csv.GetRecordsAsync<HolidayItemRecord>(taskCancellationToken).ConfigureAwait(false))
+            await foreach (var record in CsvLoader.GetRecordsAsync<HolidayItemRecord>(csv, taskCancellationToken).ConfigureAwait(false))
             {
                 var item = record.ToHolidayItem();
                 if (item is null)
@@ -57,11 +57,13 @@ namespace CompanyCalendar.Importer.Csv
             }
         }
 
+        private static IAsyncEnumerable<T> GetRecordsAsync<T>(IReader csv, CancellationToken taskCancellationToken) where T : new() =>
+            csv.GetRecordsAsync<T>(taskCancellationToken);
+
         /// <summary>
         /// CSV ファイルのレコードを表します。
         /// </summary>
         [DebuggerDisplay("{Date}(Kind={Kind}) {Summary}")]
-        // ReSharper disable once ClassNeverInstantiated.Local
         private class HolidayItemRecord
         {
             /// <summary>

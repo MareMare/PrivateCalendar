@@ -8,6 +8,8 @@ namespace CompanyCalendar.Importer.Csv
     {
         public static IServiceCollection AddCsvImporter(this IServiceCollection services, IConfiguration configuration)
         {
+            ArgumentNullException.ThrowIfNull(services);
+            ArgumentNullException.ThrowIfNull(configuration);
             return services
                 .Configure<CsvLoaderOptions>(configuration.GetSection(CsvLoaderOptions.Key))
                 .Configure<CsvLoaderOptions>(options => options.FileEncoding = Encoding.UTF8)

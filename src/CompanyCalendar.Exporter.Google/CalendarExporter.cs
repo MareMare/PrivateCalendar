@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Globalization;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
@@ -25,7 +26,9 @@ namespace CompanyCalendar.Exporter.Google
 
         public async Task ExportAsync(IEnumerable<(DateTime date, string summary)> eventPairs, CancellationToken taskCancellationToken = default)
         {
-            using var service = await CreateCalendarServiceAsync(taskCancellationToken);
+            ArgumentNullException.ThrowIfNull(eventPairs);
+
+            using var service = await this.CreateCalendarServiceAsync(taskCancellationToken).ConfigureAwait(false);
             foreach ((DateTime date, string summary) in eventPairs)
             {
                 var existingEvent = await this.FindEventAsync(service, date, taskCancellationToken).ConfigureAwait(false);
@@ -141,8 +144,8 @@ namespace CompanyCalendar.Exporter.Google
             var events = await request.ExecuteAsync().ConfigureAwait(false);
             foreach (var eventItem in events.Items)
             {
-                var lowerDateTime = eventItem.Start.DateTime ?? DateTime.Parse(eventItem.Start.Date);
-                var upperDateTime = eventItem.End.DateTime ?? DateTime.Parse(eventItem.End.Date);
+                var lowerDateTime = eventItem.Start.DateTime ?? DateTime.Parse(eventItem.Start.Date, CultureInfo.InvariantCulture);
+                var upperDateTime = eventItem.End.DateTime ?? DateTime.Parse(eventItem.End.Date, CultureInfo.InvariantCulture);
 
                 Debug.Print($"{lowerDateTime} to {upperDateTime} {eventItem.Summary}");
             }
@@ -160,7 +163,7 @@ namespace CompanyCalendar.Exporter.Google
             };
 
             var events = await request.ExecuteAsync(taskCancellationToken).ConfigureAwait(false);
-            var foundEventItem = events.Items.FirstOrDefault(item => item.Summary.StartsWith("HSC"));
+            var foundEventItem = events.Items.FirstOrDefault(item => item.Summary.StartsWith("HSC", StringComparison.InvariantCulture));
             return foundEventItem;
         }
 

@@ -7,6 +7,8 @@ namespace CompanyCalendar.Exporter.Ics
     {
         public static IServiceCollection AddIcsExporter(this IServiceCollection services, IConfiguration configuration)
         {
+            ArgumentNullException.ThrowIfNull(services);
+            ArgumentNullException.ThrowIfNull(configuration);
             return services
                 .Configure<IcsExporterOptions>(configuration.GetSection(IcsExporterOptions.Key))
                 .AddTransient<IIcsExporter, IcsExporter>();

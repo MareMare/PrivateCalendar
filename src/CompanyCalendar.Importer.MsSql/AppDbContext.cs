@@ -35,6 +35,8 @@ namespace CompanyCalendar.Importer.MsSql
         /// <inheritdoc />
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            ArgumentNullException.ThrowIfNull(modelBuilder);
+
             modelBuilder.Entity<HolidayItem>(entity =>
             {
                 entity.ToTable("CompanyHolidays")

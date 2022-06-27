@@ -9,6 +9,8 @@ namespace CompanyCalendar.Hosting.WinForms
         public static void Run<TMainForm>(IHostBuilder hostBuilder)
             where TMainForm : Form
         {
+            ArgumentNullException.ThrowIfNull(hostBuilder);
+
             using var host = hostBuilder.Build();
             using var serviceScope = host.Services.CreateAsyncScope();
             var services = serviceScope.ServiceProvider;
@@ -27,6 +29,7 @@ namespace CompanyCalendar.Hosting.WinForms
             catch (Exception ex)
             {
                 logger.LogCritical(ex, "起動中に例外が発生しました。{ex}", ex.Message);
+                throw;
             }
         }
     }

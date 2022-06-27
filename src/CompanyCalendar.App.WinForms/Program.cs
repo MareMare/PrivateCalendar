@@ -20,7 +20,7 @@ namespace CompanyCalendar.App.WinForms
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            WinFormsApplication.Run<Form1>(CreateHostBuilder(args));
+            WinFormsApplication.Run<Form1>(Program.CreateHostBuilder(args));
         }
 
         private static IHostBuilder CreateHostBuilder(string[] args) =>

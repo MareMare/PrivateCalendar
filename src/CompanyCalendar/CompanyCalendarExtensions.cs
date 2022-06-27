@@ -84,6 +84,8 @@
             DateTime? lowerDate = null,
             DateTime? upperDate = null)
         {
+            ArgumentNullException.ThrowIfNull(holidayItemsMapping);
+
             var holidayItems = holidayItemsMapping.Values;
             var minDateItem = holidayItems.MinBy(item => item.Date);
             var maxDateItem = holidayItems.MaxBy(item => item.Date);

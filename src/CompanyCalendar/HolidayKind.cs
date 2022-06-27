@@ -1,13 +1,15 @@
-﻿// ReSharper disable IdentifierTypo
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace CompanyCalendar
 {
     /// <summary>
     /// 休日種別を示す列挙体を表します。
     /// </summary>
+    [Flags]
     public enum HolidayKind
     {
         /// <summary>出勤日を表します。</summary>
+        [SuppressMessage("Design", "CA1008:列挙型は 0 値を含んでいなければなりません", Justification = "取込元の値と意味に合わせます。")]
         Shukkimbi = 0,
 
         /// <summary>休日を表します。</summary>
