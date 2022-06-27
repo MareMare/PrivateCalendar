@@ -11,11 +11,6 @@
     <AnalysisLevel>latest-all</AnalysisLevel>
   </PropertyGroup>
 
-  <!-- StyleCop -->
-  <ItemGroup Condition=" '!$(IsTestProject)' == 'True' ">
-    <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="stylecop.json" />
-  </ItemGroup>
-
   <!-- ライセンスファイル -->
   <PropertyGroup Condition=" '!$(IsTestProject)' == 'True' ">
     <PackageLicenseFile>$(MSBuildThisFileDirectory)LICENSE</PackageLicenseFile>
