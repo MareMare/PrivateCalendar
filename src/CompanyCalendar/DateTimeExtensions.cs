@@ -1,4 +1,11 @@
-﻿namespace CompanyCalendar
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="DateTimeExtensions.cs" company="MareMare">
+// Copyright © 2022 MareMare. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace CompanyCalendar
 {
     /// <summary>
     /// <see cref="DateTime" /> クラスの拡張メソッドを提供します。
@@ -19,7 +26,7 @@
         /// <param name="dateTime">変換元の  <see cref="DateTime" />。</param>
         /// <returns>指定された <see cref="DateTime" /> の当月 1 日の日付。</returns>
         public static DateTime ToFirstDayInMonth(this DateTime dateTime) =>
-            new(dateTime.Year, dateTime.Month, 1);
+            new (dateTime.Year, dateTime.Month, 1);
 
         /// <summary>
         /// 指定された <see cref="DateTime" /> から当月末日の日付に変換します。
@@ -27,7 +34,7 @@
         /// <param name="dateTime">変換元の  <see cref="DateTime" />。</param>
         /// <returns>指定された <see cref="DateTime" /> の当月末日の日付。</returns>
         public static DateTime ToLastDayInMonth(this DateTime dateTime) =>
-            new(dateTime.Year, dateTime.Month, DateTime.DaysInMonth(dateTime.Year, dateTime.Month));
+            new (dateTime.Year, dateTime.Month, DateTime.DaysInMonth(dateTime.Year, dateTime.Month));
 
         /// <summary>
         /// 指定された <see cref="DateTime" /> の翌日へ変換します。
@@ -51,7 +58,7 @@
         /// <param name="dateTime">対象の日時。</param>
         /// <returns>ミリ秒を除外した日時。</returns>
         public static DateTime ToExceptedMilliseconds(this DateTime dateTime) =>
-            new(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second);
+            new (dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second);
 
         /// <summary>
         /// 秒を除外した (0 秒 0 ミリ秒とした) 日時に変換します。
@@ -59,7 +66,7 @@
         /// <param name="dateTime">対象の日時。</param>
         /// <returns>秒を除外した日時。</returns>
         public static DateTime ToExceptedSeconds(this DateTime dateTime) =>
-            new(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, 0);
+            new (dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, 0);
 
         /// <summary>
         /// 現在の日時にローカルタイムゾーンを設定します。
@@ -69,7 +76,17 @@
         public static DateTime SetLocalTimeZone(this DateTime dateTime) =>
             DateTime.SpecifyKind(dateTime, DateTimeKind.Local);
 
-        public static IEnumerable<DateTime> YieldDates(this DateTime? lowerDate, DateTime? upperDate, Func<DateTime, DateTime>? getNextDate = null) =>
+        /// <summary>
+        /// 指定された期間の各日付を列挙します。
+        /// </summary>
+        /// <param name="lowerDate">期間の開始日付。</param>
+        /// <param name="upperDate">期間の終了日付。</param>
+        /// <param name="getNextDate">次の日付を取得するメソッドのデリゲート。</param>
+        /// <returns>日付の列挙。</returns>
+        public static IEnumerable<DateTime> YieldDates(
+            this DateTime? lowerDate,
+            DateTime? upperDate,
+            Func<DateTime, DateTime>? getNextDate = null) =>
             lowerDate.HasValue && upperDate.HasValue
                 ? lowerDate.Value.YieldDates(upperDate.Value, getNextDate)
                 : Array.Empty<DateTime>();
@@ -81,7 +98,10 @@
         /// <param name="upperDate">期間の終了日付。</param>
         /// <param name="getNextDate">次の日付を取得するメソッドのデリゲート。</param>
         /// <returns>日付の列挙。</returns>
-        public static IEnumerable<DateTime> YieldDates(this DateTime lowerDate, DateTime upperDate, Func<DateTime, DateTime>? getNextDate = null)
+        public static IEnumerable<DateTime> YieldDates(
+            this DateTime lowerDate,
+            DateTime upperDate,
+            Func<DateTime, DateTime>? getNextDate = null)
         {
             var getNextDateAction = getNextDate ?? (date => date.AddDays(1));
             for (var date = lowerDate; date <= upperDate; date = getNextDateAction(date))

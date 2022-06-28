@@ -1,4 +1,11 @@
-﻿using System.Diagnostics;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="HolidayItem.cs" company="MareMare">
+// Copyright © 2022 MareMare. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
+using System.Diagnostics;
 
 namespace CompanyCalendar
 {
@@ -42,9 +49,6 @@ namespace CompanyCalendar
         /// 値を表す <see cref="bool" /> 型。
         /// <para>休日の場合 <see langword="true" />。それ以外は <see langword="false" />。</para>
         /// </value>
-        public bool IsHoliday
-        {
-            get => this.Kind.IsHoliday();
-        }
+        public bool IsHoliday => this.Kind.IsHoliday();
     }
 }

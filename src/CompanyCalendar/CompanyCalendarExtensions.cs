@@ -1,20 +1,42 @@
-﻿namespace CompanyCalendar
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="CompanyCalendarExtensions.cs" company="MareMare">
+// Copyright © 2022 MareMare. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace CompanyCalendar
 {
     /// <summary>
     /// 拡張メソッドを提供します。
     /// </summary>
     public static class CompanyCalendarExtensions
     {
+        /// <summary>
+        /// 指定された <see cref="HolidayKind" /> が休日かどうかを判断します。
+        /// </summary>
+        /// <param name="kind"><see cref="HolidayKind" />。</param>
+        /// <returns>休日の場合 <see langword="true" />。それ以外は <see langword="false" />。</returns>
         public static bool IsHoliday(this HolidayKind kind) =>
             kind switch
             {
                 HolidayKind.Shukkimbi => false,
-                _ => true,
+                _ => true
             };
 
-        public static bool IsWeekend(this DateTime dateTime) =>
-            dateTime.DayOfWeek.ToHolidayKind().IsHoliday();
+        /// <summary>
+        /// 指定された <see cref="DateTime" /> が週末かどうかを判断します。
+        /// </summary>
+        /// <param name="dateTime"><see cref="DateTime" />。</param>
+        /// <returns>週末の場合 <see langword="true" />。それ以外は <see langword="false" />。</returns>
+        public static bool IsWeekend(this DateTime dateTime) => dateTime.DayOfWeek.ToHolidayKind().IsHoliday();
 
+        /// <summary>
+        /// 指定された <see cref="DayOfWeek" /> を <see cref="HolidayKind" /> へ変換します。
+        /// </summary>
+        /// <param name="week"><see cref="DayOfWeek" />。</param>
+        /// <returns>変換結果の <see cref="HolidayKind" />。</returns>
+        /// <exception cref="ArgumentOutOfRangeException">変換できません。</exception>
         public static HolidayKind ToHolidayKind(this DayOfWeek week) =>
             week switch
             {
@@ -28,6 +50,13 @@
                 _ => throw new ArgumentOutOfRangeException(nameof(week), week, null)
             };
 
+        /// <summary>
+        /// <see cref="HolidayKind" /> をイベント概要を示す文字列へ変換します。
+        /// </summary>
+        /// <param name="kind"><see cref="HolidayKind" />。</param>
+        /// <param name="prefix">接頭語。</param>
+        /// <returns>イベント概要を示す文字列。</returns>
+        /// <exception cref="ArgumentOutOfRangeException">変換できません。</exception>
         public static string? ToEventSummary(this HolidayKind kind, string? prefix = null) =>
             kind switch
             {
@@ -38,6 +67,15 @@
                 _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, null)
             };
 
+        /// <summary>
+        /// 不定期なイベントかどうかを判断します。
+        /// </summary>
+        /// <param name="calendar"><see cref="DateTime" />。</param>
+        /// <param name="holidayItem">
+        /// <paramref name="calendar" /> に紐付けられた <see cref="HolidayItem" />。
+        /// <paramref name="calendar" /> に紐付かない場合は <see langword="null" />。
+        /// </param>
+        /// <returns>不定期なイベントの場合 <see cref="HolidayKind" />。それ以外は <see langword="null" />。</returns>
         public static HolidayKind? IsIrregular(this DateTime calendar, HolidayItem? holidayItem)
         {
             // ----------------------------------------
@@ -59,7 +97,7 @@
                 {
                     HolidayKind.Kyujitsu => HolidayKind.Kyujitsu,
                     HolidayKind.YukyuKijumbi => HolidayKind.YukyuKijumbi,
-                    _ => null,
+                    _ => null
                 };
             }
 
@@ -69,16 +107,30 @@
                 null => HolidayKind.Shukkimbi,
                 HolidayKind.Shukkimbi => HolidayKind.Shukkimbi,
                 HolidayKind.YukyuKijumbi => HolidayKind.YukyuKijumbi,
-                _ => null,
+                _ => null
             };
         }
 
+        /// <summary>
+        /// <see cref="HolidayItem" /> のコレクションから不定期イベントのタプルコレクションへ変換します。
+        /// </summary>
+        /// <param name="holidayItems"><see cref="HolidayItem" /> のコレクション。</param>
+        /// <param name="lowerDate">開始日付。</param>
+        /// <param name="upperDate">終了日付。</param>
+        /// <returns><see cref="DateTime" /> と <see cref="HolidayKind" /> のタプルコレクション。</returns>
         public static ICollection<(DateTime Date, HolidayKind IrregularKind)> ToIrregularPairs(
             this ICollection<HolidayItem> holidayItems,
             DateTime? lowerDate = null,
             DateTime? upperDate = null) =>
             holidayItems.ToDictionary(item => item.Date).ToIrregularPairs(lowerDate, upperDate);
 
+        /// <summary>
+        /// <see cref="HolidayItem" /> のコレクションから不定期イベントのタプルコレクションへ変換します。
+        /// </summary>
+        /// <param name="holidayItemsMapping"><see cref="DateTime" /> をキーとした <see cref="HolidayItem" /> のコレクション。</param>
+        /// <param name="lowerDate">開始日付。</param>
+        /// <param name="upperDate">終了日付。</param>
+        /// <returns><see cref="DateTime" /> と <see cref="HolidayKind" /> のタプルコレクション。</returns>
         public static ICollection<(DateTime Date, HolidayKind IrregularKind)> ToIrregularPairs(
             this IDictionary<DateTime, HolidayItem> holidayItemsMapping,
             DateTime? lowerDate = null,
@@ -94,6 +146,13 @@
             return holidayItemsMapping.ToIrregularPairsCore(resolvedLowerDate, resolvedUpperDate);
         }
 
+        /// <summary>
+        /// <see cref="HolidayItem" /> のコレクションから不定期イベントのタプルコレクションへ変換します。
+        /// </summary>
+        /// <param name="holidayItemsMapping"><see cref="DateTime" /> をキーとした <see cref="HolidayItem" /> のコレクション。</param>
+        /// <param name="lowerDate">開始日付。</param>
+        /// <param name="upperDate">終了日付。</param>
+        /// <returns><see cref="DateTime" /> と <see cref="HolidayKind" /> のタプルコレクション。</returns>
         private static ICollection<(DateTime Date, HolidayKind IrregularKind)> ToIrregularPairsCore(
             this IDictionary<DateTime, HolidayItem> holidayItemsMapping,
             DateTime? lowerDate,
@@ -104,7 +163,7 @@
                 {
                     var holidayItem = holidayItemsMapping.TryGetValue(calendar, out var item) ? item : null;
                     var irregularKind = calendar.IsIrregular(holidayItem);
-                    return new { Date = calendar, IrregularKind = irregularKind, };
+                    return new { Date = calendar, IrregularKind = irregularKind };
                 })
                 .Where(pair => pair.IrregularKind.HasValue)
                 .Select(pair => (pair.Date, pair.IrregularKind!.Value))
