@@ -1,4 +1,11 @@
-﻿using System.Diagnostics;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="CsvLoader.cs" company="MareMare">
+// Copyright © 2022 MareMare. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
+using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using CsvHelper;
@@ -8,10 +15,18 @@ using Microsoft.Extensions.Options;
 
 namespace CompanyCalendar.Importer.Csv
 {
+    /// <summary>
+    /// CSV ファイルから読み込みを提供します。
+    /// </summary>
     public class CsvLoader : ICsvLoader
     {
+        /// <summary>オプション構成を表します。</summary>
         private readonly CsvLoaderOptions _options;
 
+        /// <summary>
+        /// <see cref="CsvLoader" /> クラスの新しいインスタンスを初期化します。
+        /// </summary>
+        /// <param name="options">オプション構成。</param>
         public CsvLoader(IOptions<CsvLoaderOptions> options)
         {
             ArgumentNullException.ThrowIfNull(options);
@@ -20,6 +35,7 @@ namespace CompanyCalendar.Importer.Csv
             this._options = options.Value;
         }
 
+        /// <inheritdoc />
         public async IAsyncEnumerable<HolidayItem> LoadAsync(
             string csvFilePath,
             DateTime? lowerDate = null,
@@ -32,11 +48,13 @@ namespace CompanyCalendar.Importer.Csv
                 HasHeaderRecord = true,
                 DetectColumnCountChanges = true,
                 Encoding = encoding,
-                ShouldSkipRecord = records => records.Record.All(string.IsNullOrEmpty),
+
                 // NOTE: [c\# \- How to ignore empty rows in CSV when reading \- Stack Overflow](https://stackoverflow.com/a/57994196)
+                ShouldSkipRecord = records => records.Record.All(string.IsNullOrEmpty),
             };
 
-            using var stream = File.Open(csvFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            var stream = File.Open(csvFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            await using var _ = stream.ConfigureAwait(false); // TODO: あってる？
             using var reader = new StreamReader(stream, encoding);
             using var csv = new CsvReader(reader, csvConfig);
             await foreach (var record in CsvLoader.GetRecordsAsync<HolidayItemRecord>(csv, taskCancellationToken).ConfigureAwait(false))
@@ -57,7 +75,15 @@ namespace CompanyCalendar.Importer.Csv
             }
         }
 
-        private static IAsyncEnumerable<T> GetRecordsAsync<T>(IReader csv, CancellationToken taskCancellationToken) where T : new() =>
+        /// <summary>
+        /// 非同期操作として、<see cref="IReader" /> からレコードを読み込みます。
+        /// </summary>
+        /// <typeparam name="T">レコードの型。</typeparam>
+        /// <param name="csv"><see cref="IReader" />。</param>
+        /// <param name="taskCancellationToken"><see cref="CancellationToken" />。</param>
+        /// <returns><typeparamref name="T" /> の非同期イテレーションを提供する列挙子。</returns>
+        private static IAsyncEnumerable<T> GetRecordsAsync<T>(IReader csv, CancellationToken taskCancellationToken)
+            where T : new() =>
             csv.GetRecordsAsync<T>(taskCancellationToken);
 
         /// <summary>
@@ -98,12 +124,11 @@ namespace CompanyCalendar.Importer.Csv
             public string? Summary { get; set; }
 
             /// <summary>
-            /// <see cref="HolidayItem"/> へ変換します。
+            /// <see cref="HolidayItem" /> へ変換します。
             /// </summary>
-            /// <returns><see cref="HolidayItem"/>。変換できない場合は <see langword="null" />。</returns>
-            public HolidayItem? ToHolidayItem()
-            {
-                return this.Date.HasValue
+            /// <returns><see cref="HolidayItem" />。変換できない場合は <see langword="null" />。</returns>
+            public HolidayItem? ToHolidayItem() =>
+                this.Date.HasValue
                     ? new HolidayItem
                     {
                         Date = this.Date.Value,
@@ -111,7 +136,6 @@ namespace CompanyCalendar.Importer.Csv
                         Summary = this.Summary,
                     }
                     : null;
-            }
         }
     }
 }
