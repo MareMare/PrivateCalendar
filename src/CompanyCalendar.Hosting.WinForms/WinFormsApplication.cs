@@ -20,9 +20,7 @@ namespace CompanyCalendar.Hosting.WinForms
         /// 現在のスレッドで標準のアプリケーションメッセージループの実行を開始し、<typeparamref name="TMainForm" /> フォームを表示します。
         /// </summary>
         /// <typeparam name="TMainForm">メインウィンドウの型。</typeparam>
-        /// <param name="hostBuilder">
-        /// <see cref="IHostBuilder" />
-        /// </param>
+        /// <param name="hostBuilder"><see cref="IHostBuilder" />。</param>
         public static void Run<TMainForm>(IHostBuilder hostBuilder)
             where TMainForm : Form
         {
