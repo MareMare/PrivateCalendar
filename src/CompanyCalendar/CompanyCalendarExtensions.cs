@@ -21,7 +21,7 @@ namespace CompanyCalendar
             kind switch
             {
                 HolidayKind.Shukkimbi => false,
-                _ => true
+                _ => true,
             };
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace CompanyCalendar
                 DayOfWeek.Friday => HolidayKind.Shukkimbi,
                 DayOfWeek.Saturday => HolidayKind.Kyujitsu,
                 DayOfWeek.Sunday => HolidayKind.Kyujitsu,
-                _ => throw new ArgumentOutOfRangeException(nameof(week), week, null)
+                _ => throw new ArgumentOutOfRangeException(nameof(week), week, null),
             };
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace CompanyCalendar
                 HolidayKind.Kyujitsu => $"{prefix}休日",
                 HolidayKind.Shukujitsu => null,
                 HolidayKind.YukyuKijumbi => $"{prefix}夏季休暇",
-                _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, null)
+                _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, null),
             };
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace CompanyCalendar
                 {
                     HolidayKind.Kyujitsu => HolidayKind.Kyujitsu,
                     HolidayKind.YukyuKijumbi => HolidayKind.YukyuKijumbi,
-                    _ => null
+                    _ => null,
                 };
             }
 
@@ -107,7 +107,7 @@ namespace CompanyCalendar
                 null => HolidayKind.Shukkimbi,
                 HolidayKind.Shukkimbi => HolidayKind.Shukkimbi,
                 HolidayKind.YukyuKijumbi => HolidayKind.YukyuKijumbi,
-                _ => null
+                _ => null,
             };
         }
 
@@ -118,8 +118,8 @@ namespace CompanyCalendar
         /// <param name="lowerDate">開始日付。</param>
         /// <param name="upperDate">終了日付。</param>
         /// <returns><see cref="DateTime" /> と <see cref="HolidayKind" /> のタプルコレクション。</returns>
-        public static ICollection<(DateTime Date, HolidayKind IrregularKind)> ToIrregularPairs(
-            this ICollection<HolidayItem> holidayItems,
+        public static IReadOnlyCollection<(DateTime Date, HolidayKind IrregularKind)> ToIrregularPairs(
+            this IEnumerable<HolidayItem> holidayItems,
             DateTime? lowerDate = null,
             DateTime? upperDate = null) =>
             holidayItems.ToDictionary(item => item.Date).ToIrregularPairs(lowerDate, upperDate);
@@ -131,7 +131,7 @@ namespace CompanyCalendar
         /// <param name="lowerDate">開始日付。</param>
         /// <param name="upperDate">終了日付。</param>
         /// <returns><see cref="DateTime" /> と <see cref="HolidayKind" /> のタプルコレクション。</returns>
-        public static ICollection<(DateTime Date, HolidayKind IrregularKind)> ToIrregularPairs(
+        public static IReadOnlyCollection<(DateTime Date, HolidayKind IrregularKind)> ToIrregularPairs(
             this IDictionary<DateTime, HolidayItem> holidayItemsMapping,
             DateTime? lowerDate = null,
             DateTime? upperDate = null)
@@ -153,7 +153,7 @@ namespace CompanyCalendar
         /// <param name="lowerDate">開始日付。</param>
         /// <param name="upperDate">終了日付。</param>
         /// <returns><see cref="DateTime" /> と <see cref="HolidayKind" /> のタプルコレクション。</returns>
-        private static ICollection<(DateTime Date, HolidayKind IrregularKind)> ToIrregularPairsCore(
+        private static IReadOnlyCollection<(DateTime Date, HolidayKind IrregularKind)> ToIrregularPairsCore(
             this IDictionary<DateTime, HolidayItem> holidayItemsMapping,
             DateTime? lowerDate,
             DateTime? upperDate)
@@ -167,8 +167,8 @@ namespace CompanyCalendar
                 })
                 .Where(pair => pair.IrregularKind.HasValue)
                 .Select(pair => (pair.Date, pair.IrregularKind!.Value))
-                .ToArray();
-            return query;
+                .ToList();
+            return query.AsReadOnly();
         }
     }
 }
