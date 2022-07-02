@@ -5,7 +5,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 namespace CompanyCalendar.App.WinForms.Progress;
 
@@ -14,16 +14,23 @@ namespace CompanyCalendar.App.WinForms.Progress;
 /// </summary>
 public partial class ProgressForm : Form
 {
+    /// <summary><see cref="ILogger{T}" /> を表します。</summary>
+    private readonly ILogger<ProgressForm> _logger;
+
     /// <summary>進行状況の報告者を表します。</summary>
     private readonly ProgressReporter _progressReporter;
 
     /// <summary>
     /// <see cref="ProgressForm" /> クラスの新しいインスタンスを生成します。
     /// </summary>
-    public ProgressForm()
+    /// <param name="logger"><see cref="ILogger{T}" />。</param>
+    public ProgressForm(ILogger<ProgressForm> logger)
     {
-        this.InitializeComponent();
+        ArgumentNullException.ThrowIfNull(logger);
+
+        this._logger = logger;
         this._progressReporter = new ProgressReporter(this.UpdateBy);
+        this.InitializeComponent();
     }
 
     /// <summary>
@@ -61,16 +68,30 @@ public partial class ProgressForm : Form
         new ProgressFormScope(this, this.ShowDialogAsync(owner));
 
     /// <inheritdoc />
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            if (this.components != null)
+            {
+                this.components.Dispose();
+            }
+        }
+
+        base.Dispose(disposing);
+    }
+
+    /// <inheritdoc />
     protected override void OnLoad(EventArgs e)
     {
-        Debug.Print($"{nameof(ProgressForm)}.{nameof(this.OnLoad)}");
+        this._logger.LogTrace($"{nameof(ProgressForm)}.{nameof(this.OnLoad)}");
         base.OnLoad(e);
     }
 
     /// <inheritdoc />
     protected override void OnShown(EventArgs e)
     {
-        Debug.Print($"{nameof(ProgressForm)}.{nameof(this.OnShown)}");
+        this._logger.LogTrace($"{nameof(ProgressForm)}.{nameof(this.OnShown)}");
         base.OnShown(e);
     }
 
@@ -114,6 +135,8 @@ public partial class ProgressForm : Form
             ArgumentNullException.ThrowIfNull(progressForm);
             ArgumentNullException.ThrowIfNull(progressFormTask);
 
+            progressForm._logger.LogTrace($"{nameof(ProgressFormScope)}.ctor");
+
             this._progressForm = progressForm;
             this._progressFormTask = progressFormTask;
             this.Reporter = progressForm._progressReporter;
@@ -125,9 +148,13 @@ public partial class ProgressForm : Form
         /// <inheritdoc />
         public async ValueTask DisposeAsync()
         {
+            this._progressForm._logger.LogTrace($"{nameof(ProgressFormScope)}.{nameof(this.DisposeAsync)}...start");
+
             // NOTE: https://stackoverflow.com/a/33411037
             this._progressForm.Close();
             await this._progressFormTask.ConfigureAwait(true);
+
+            this._progressForm._logger.LogTrace($"{nameof(ProgressFormScope)}.{nameof(this.DisposeAsync)}...finish");
         }
     }
 }

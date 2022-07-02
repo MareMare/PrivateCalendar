@@ -19,15 +19,16 @@ namespace CompanyCalendar.App.WinForms.Progress
         /// </summary>
         /// <param name="services"><see cref="IServiceCollection" />。</param>
         /// <returns>依存関係が追加された <see cref="IServiceCollection" />。</returns>
-        public static IServiceCollection AddProgressForm(this IServiceCollection services) => services.AddScoped<ProgressForm>();
+        public static IServiceCollection AddProgressForm(this IServiceCollection services) =>
+            services.AddScoped<ProgressForm>();
 
         /// <summary>
-        /// <see cref="ProgressForm"/> を使用します。
+        /// <see cref="ProgressForm" /> を使用します。
         /// </summary>
-        /// <param name="serviceProvider"><see cref="IServiceProvider"/>。</param>
+        /// <param name="serviceProvider"><see cref="IServiceProvider" />。</param>
         /// <param name="owner">フォームを所有するトップレベルウィンドウ。</param>
-        /// <param name="configure"><see cref="ProgressForm"/> を構築するメソッドのデリゲート。</param>
-        /// <returns><see cref="IProgressScope"/>。</returns>
+        /// <param name="configure"><see cref="ProgressForm" /> を構築するメソッドのデリゲート。</param>
+        /// <returns><see cref="IProgressScope" />。</returns>
         public static IProgressScope UseProgressForm(
             this IServiceProvider serviceProvider,
             IWin32Window owner,
@@ -37,6 +38,5 @@ namespace CompanyCalendar.App.WinForms.Progress
             configure?.Invoke(progressForm);
             return progressForm.UseProgressFormScope(owner);
         }
-
     }
 }

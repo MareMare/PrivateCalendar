@@ -5,6 +5,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using CompanyCalendar.App.WinForms.Progress;
 using CompanyCalendar.Exporter.Google;
 using CompanyCalendar.Exporter.Ics;
 using CompanyCalendar.Hosting.WinForms;
@@ -31,7 +32,7 @@ namespace CompanyCalendar.App.WinForms
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            WinFormsApplication.Run<Form1>(Program.CreateHostBuilder(args));
+            WinFormsApplication.Run<MainForm>(Program.CreateHostBuilder(args));
         }
 
         /// <summary>
@@ -51,6 +52,7 @@ namespace CompanyCalendar.App.WinForms
         /// <param name="configuration"><see cref="IConfiguration" />。</param>
         /// <param name="environment"><see cref="IHostEnvironment" />。</param>
         /// <returns>依存関係が追加された <see cref="IServiceCollection" />。</returns>
+        // ReSharper disable once UnusedMethodReturnValue.Local
         private static IServiceCollection AddConfiguredServices(
             this IServiceCollection services,
             IConfiguration configuration,
@@ -60,6 +62,8 @@ namespace CompanyCalendar.App.WinForms
                 .AddIcsExporter(configuration)
                 .AddCsvImporter(configuration)
                 .AddMsSqlImporter(configuration, environment)
-                .AddTransient<Form1>();
+                .AddProgressForm()
+                .AddTransient<MainForm>()
+            ;
     }
 }
