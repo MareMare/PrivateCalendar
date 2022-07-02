@@ -1,0 +1,62 @@
+name: .NET Build & UnitTests
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - "src/**"
+  pull_request:
+    branches: [ main ]
+    paths:
+      - "src/**"
+
+jobs:
+  build-and-test:
+
+    strategy:
+      matrix:
+        configuration: [ Release ]
+        include:
+          - os: windows-latest
+            osName: Windows
+
+    name: 🚀 [${{ matrix.configuration }}] Build and Test on ${{ matrix.osName }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: 🛒 Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: ✨ Set up .NET 6.0
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.0.x
+
+      - name: 🚚 Restore dependencies
+        working-directory: src
+        run: dotnet restore
+
+      # - name: 🗄️ Setup sample.json
+      #   uses: microsoft/variable-substitution@v1 
+      #   with:
+      #     files: 'src/ConsoleApp.Test/sample.json'
+      #   env:
+      #     apikey: ${{ secrets.SAMPLEAPIKEY }}
+
+      - name: 🛠️ Build
+        working-directory: src
+        run: dotnet build --configuration $env:Configuration --no-restore
+        env:
+          Configuration: ${{ matrix.configuration }}
+
+      - name: 🧪 Test
+        working-directory: src
+        run: dotnet test --configuration $env:Configuration --no-build --verbosity normal --filter Category!=local
+        env:
+          Configuration: ${{ matrix.configuration }}
+          ApplicationName: ${{ secrets.APPLICATIONNAME }}
+          CalendarId: ${{ secrets.CALENDARID }}
+          ServiceAccountClientEmail: ${{ secrets.SERVICEACCOUNTCLIENTEMAIL }}
+          ServiceAccountPrivateKey: ${{ secrets.SERVICEACCOUNTPRIVATEKEY }}

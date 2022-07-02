@@ -1,0 +1,17 @@
+{
+  // launchSettings.json
+  "profiles": {
+    "(Dev)App.WinForms": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    },
+    "(Pro)App.WinForms": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Production"
+      }
+    }
+  }
+}
