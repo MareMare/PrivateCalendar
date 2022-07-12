@@ -50,11 +50,13 @@ namespace CompanyCalendar.Importer.Csv
                 Encoding = encoding,
 
                 // NOTE: [c\# \- How to ignore empty rows in CSV when reading \- Stack Overflow](https://stackoverflow.com/a/57994196)
-                ShouldSkipRecord = records => records.Record.All(string.IsNullOrEmpty),
+                // NOTE: [c\# \- How to skip blank rows in CsvHelper >28\.0\.0? \- Stack Overflow](https://stackoverflow.com/questions/72937181/how-to-skip-blank-rows-in-csvhelper-28-0-0/72937276#72937276)
+                // NOTE: [CsvHelper/index\.md at 3cb8507932c62e1e39f09026999bcfca864ad0a6 · JoshClose/CsvHelper](https://github.com/JoshClose/CsvHelper/blob/3cb8507932c62e1e39f09026999bcfca864ad0a6/src/CsvHelper.Website/input/migration/v28/index.md)
+                ShouldSkipRecord = records => records.Row.Parser.Record?.All(string.IsNullOrEmpty) ?? false,
             };
 
             var stream = File.Open(csvFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            await using var _ = stream.ConfigureAwait(false); // TODO: あってる？
+            await using var streamAsyncDisposable = stream.ConfigureAwait(false);
             using var reader = new StreamReader(stream, encoding);
             using var csv = new CsvReader(reader, csvConfig);
             await foreach (var record in CsvLoader.GetRecordsAsync<HolidayItemRecord>(csv, taskCancellationToken).ConfigureAwait(false))
