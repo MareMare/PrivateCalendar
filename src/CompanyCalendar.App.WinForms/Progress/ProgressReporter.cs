@@ -21,7 +21,11 @@ internal class ProgressReporter : Progress<ProgressInfo>, IProgressReporter
     public ProgressReporter()
     {
         this._defaultTimeout = TimeSpan.FromSeconds(1.0d);
+        this.ProgressChanged += (_, info) => this.OnProgressInfoChanged(info);
     }
+
+    /// <inheritdoc />
+    public event EventHandler<ProgressInfoEventArgs>? ProgressInfoChanged;
 
     /// <summary>
     /// 進行状況の更新を報告します。
@@ -56,7 +60,21 @@ internal class ProgressReporter : Progress<ProgressInfo>, IProgressReporter
     /// <param name="waitingTimeSpan">表示待機時間。</param>
     /// <returns>完了を表す <see cref="Task" />。</returns>
     public Task ReportFailedAsync(string message, TimeSpan? waitingTimeSpan = null) =>
-        this.ReportCoreAsync(ProgressInfo.New(message, 100d), waitingTimeSpan ?? this._defaultTimeout);
+        this.ReportCoreAsync(ProgressInfo.New(message, 100d, isFailure: true), waitingTimeSpan ?? this._defaultTimeout);
+
+    /// <summary>
+    /// <see cref="ProgressInfoChanged" /> イベントを発生させます。
+    /// </summary>
+    /// <param name="e">イベントデータを格納している <see cref="ProgressInfoEventArgs" />。</param>
+    protected virtual void OnProgressInfoChanged(ProgressInfoEventArgs e) =>
+        this.ProgressInfoChanged?.Invoke(this, e);
+
+    /// <summary>
+    /// <see cref="ProgressInfoChanged" /> イベントを発生させます。
+    /// </summary>
+    /// <param name="info">イベントデータを格納している <see cref="ProgressInfo" />。</param>
+    private void OnProgressInfoChanged(ProgressInfo info) =>
+        this.OnProgressInfoChanged(new ProgressInfoEventArgs(info));
 
     /// <summary>
     /// 進行状況の更新を報告します。
