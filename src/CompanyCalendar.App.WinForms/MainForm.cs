@@ -199,7 +199,9 @@ namespace CompanyCalendar.App.WinForms
                 await progress.Reporter.ReportCompletedAsync("読み込みが完了しました。").ConfigureAwait(true);
                 return holidayItems.AsReadOnly();
             }
+#pragma warning disable CA1031 // 一般的な例外の種類はキャッチしません
             catch
+#pragma warning restore CA1031 // 一般的な例外の種類はキャッチしません
             {
                 await progress.Reporter
                     .ReportFailedAsync("読み込み中に例外が発生しました。", MainForm.DelayTimeSpan)
@@ -228,7 +230,9 @@ namespace CompanyCalendar.App.WinForms
                 await Task.WhenAll(tasks).ConfigureAwait(true);
                 await progress.Reporter.ReportCompletedAsync("書き込みが完了しました。").ConfigureAwait(true);
             }
+#pragma warning disable CA1031 // 一般的な例外の種類はキャッチしません
             catch
+#pragma warning restore CA1031 // 一般的な例外の種類はキャッチしません
             {
                 await progress.Reporter
                     .ReportFailedAsync("書き込み中に例外が発生しました。", MainForm.DelayTimeSpan)
