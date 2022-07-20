@@ -38,6 +38,19 @@ public class ProgressInfo
     public double Percentage { get; private init; }
 
     /// <summary>
+    /// 進捗率 (0～100%) を算出します。
+    /// </summary>
+    /// <param name="current">現在値。</param>
+    /// <param name="total">最終値。</param>
+    /// <returns>進捗率 (0～100%)。</returns>
+    public static double CalculatePercentage(long current, long total)
+    {
+        var value = 100d * current / total;
+        var percent = value < 0d ? 0d : value > 100d ? 100d : value;
+        return percent;
+    }
+
+    /// <summary>
     /// 新しいインスタンスを生成します。
     /// </summary>
     /// <param name="message">進捗メッセージ。</param>

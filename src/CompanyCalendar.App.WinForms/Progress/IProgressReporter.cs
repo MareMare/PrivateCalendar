@@ -13,6 +13,11 @@ namespace CompanyCalendar.App.WinForms.Progress;
 public interface IProgressReporter
 {
     /// <summary>
+    /// 進行状況の値が報告されたときに発生するイベントを表します。
+    /// </summary>
+    event EventHandler<ProgressInfo>? ProgressChanged;
+
+    /// <summary>
     /// 進行状況の更新を報告します。
     /// </summary>
     /// <param name="info">進捗情報。</param>
