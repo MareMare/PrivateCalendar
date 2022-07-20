@@ -15,7 +15,7 @@ public interface IProgressReporter
     /// <summary>
     /// 進行状況の値が報告されたときに発生するイベントを表します。
     /// </summary>
-    event EventHandler<ProgressInfo>? ProgressChanged;
+    event EventHandler<ProgressInfoEventArgs>? ProgressInfoChanged;
 
     /// <summary>
     /// 進行状況の更新を報告します。

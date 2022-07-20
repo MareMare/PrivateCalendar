@@ -30,7 +30,7 @@ public partial class ProgressForm : Form
 
         this._logger = logger;
         this._progressReporter = new ProgressReporter();
-        this._progressReporter.ProgressChanged += this.OnProgressReporterOnProgressChanged;
+        this._progressReporter.ProgressInfoChanged += this.OnProgressReporterOnProgressChanged;
         this.InitializeComponent();
     }
 
@@ -73,7 +73,7 @@ public partial class ProgressForm : Form
     {
         if (disposing)
         {
-            this._progressReporter.ProgressChanged -= this.OnProgressReporterOnProgressChanged;
+            this._progressReporter.ProgressInfoChanged -= this.OnProgressReporterOnProgressChanged;
             if (this.components != null)
             {
                 this.components.Dispose();
@@ -120,8 +120,8 @@ public partial class ProgressForm : Form
     /// 進捗が変更になったときに発生するイベントのイベントハンドラです。
     /// </summary>
     /// <param name="sender">イベントソース。</param>
-    /// <param name="info">イベントデータ。</param>
-    private void OnProgressReporterOnProgressChanged(object? sender, ProgressInfo info) => this.UpdateBy(info);
+    /// <param name="e">イベントデータ。</param>
+    private void OnProgressReporterOnProgressChanged(object? sender, ProgressInfoEventArgs e) => this.UpdateBy(e.Info);
 
     /// <summary>
     /// 進捗表示する範囲を表します。
