@@ -2,6 +2,8 @@
 
 ⚠️ **_This repository is intended for me._**
 
+[![.NET Build & UnitTests](https://github.com/MareMare/PrivateCalendar/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/MareMare/PrivateCalendar/actions/workflows/ci.yml)
+
 ## ざっくり
 
 とあるカレンダーから不定期な予定を抽出して ics ファイル、個人用 Google カレンダーへ出力するツールです。
