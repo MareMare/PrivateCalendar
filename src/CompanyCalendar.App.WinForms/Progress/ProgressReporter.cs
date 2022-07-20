@@ -12,15 +12,13 @@ namespace CompanyCalendar.App.WinForms.Progress;
 /// </summary>
 internal class ProgressReporter : Progress<ProgressInfo>, IProgressReporter
 {
-    /// <summary>完了または失敗字のレポートに対するデフォルトのタイムアウト時間を表します。</summary>
+    /// <summary>完了または失敗のレポートに対するデフォルトのタイムアウト時間を表します。</summary>
     private readonly TimeSpan _defaultTimeout;
 
     /// <summary>
     /// <see cref="ProgressReporter" /> クラスの新しいインスタンスを初期化します。
     /// </summary>
-    /// <param name="handler">進行状況の値が報告される各を呼び出すメソッドのデリゲート。</param>
-    public ProgressReporter(Action<ProgressInfo> handler)
-        : base(handler)
+    public ProgressReporter()
     {
         this._defaultTimeout = TimeSpan.FromSeconds(1.0d);
     }

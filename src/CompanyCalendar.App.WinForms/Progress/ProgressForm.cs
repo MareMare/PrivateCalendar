@@ -18,7 +18,7 @@ public partial class ProgressForm : Form
     private readonly ILogger<ProgressForm> _logger;
 
     /// <summary>進行状況の報告者を表します。</summary>
-    private readonly ProgressReporter _progressReporter;
+    private readonly IProgressReporter _progressReporter;
 
     /// <summary>
     /// <see cref="ProgressForm" /> クラスの新しいインスタンスを生成します。
@@ -29,7 +29,8 @@ public partial class ProgressForm : Form
         ArgumentNullException.ThrowIfNull(logger);
 
         this._logger = logger;
-        this._progressReporter = new ProgressReporter(this.UpdateBy);
+        this._progressReporter = new ProgressReporter();
+        this._progressReporter.ProgressChanged += this.OnProgressReporterOnProgressChanged;
         this.InitializeComponent();
     }
 
@@ -72,6 +73,7 @@ public partial class ProgressForm : Form
     {
         if (disposing)
         {
+            this._progressReporter.ProgressChanged -= this.OnProgressReporterOnProgressChanged;
             if (this.components != null)
             {
                 this.components.Dispose();
@@ -96,7 +98,7 @@ public partial class ProgressForm : Form
     }
 
     /// <summary>
-    /// 進捗情報で表示更新思案す。
+    /// 進捗情報で表示更新します。
     /// </summary>
     /// <param name="progressInfo">進捗情報。</param>
     private void UpdateBy(ProgressInfo progressInfo) => this.Message = progressInfo.Message;
@@ -113,6 +115,13 @@ public partial class ProgressForm : Form
             this.Owner.Location.X + ((this.Owner.Width - this.Width) / 2),
             this.Owner.Location.Y + ((this.Owner.Height - this.Height) / 2));
     }
+
+    /// <summary>
+    /// 進捗が変更になったときに発生するイベントのイベントハンドラです。
+    /// </summary>
+    /// <param name="sender">イベントソース。</param>
+    /// <param name="info">イベントデータ。</param>
+    private void OnProgressReporterOnProgressChanged(object? sender, ProgressInfo info) => this.UpdateBy(info);
 
     /// <summary>
     /// 進捗表示する範囲を表します。
