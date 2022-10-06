@@ -33,8 +33,8 @@ jobs:
       run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
     - name: 🧪 Test
       run: dotnet test "${{ env.TESTING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --verbosity normal --filter Category!=local
-        env:
-          ApplicationName: ${{ secrets.APPLICATIONNAME }}
-          CalendarId: ${{ secrets.CALENDARID }}
-          ServiceAccountClientEmail: ${{ secrets.SERVICEACCOUNTCLIENTEMAIL }}
-          ServiceAccountPrivateKey: ${{ secrets.SERVICEACCOUNTPRIVATEKEY }}
+      env:
+        ApplicationName: ${{ secrets.APPLICATIONNAME }}
+        CalendarId: ${{ secrets.CALENDARID }}
+        ServiceAccountClientEmail: ${{ secrets.SERVICEACCOUNTCLIENTEMAIL }}
+        ServiceAccountPrivateKey: ${{ secrets.SERVICEACCOUNTPRIVATEKEY }}
