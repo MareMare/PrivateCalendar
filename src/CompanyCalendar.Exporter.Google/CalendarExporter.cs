@@ -55,20 +55,17 @@ namespace CompanyCalendar.Exporter.Google
             using var service = await this.CreateCalendarServiceAsync(taskCancellationToken).ConfigureAwait(false);
             foreach (var (date, summary) in eventPairs)
             {
-                var existingEvent
-                    = await this.FindEventAsync(service, date, taskCancellationToken).ConfigureAwait(false);
+                var existingEvent = await this.FindEventAsync(service, date, taskCancellationToken).ConfigureAwait(false);
                 if (existingEvent != null)
                 {
                     CalendarExporter.UpdateEvent(existingEvent, date, summary);
-                    var updatedEvent = await this.UpdateEventAsync(service, existingEvent, taskCancellationToken)
-                        .ConfigureAwait(false);
+                    var updatedEvent = await this.UpdateEventAsync(service, existingEvent, taskCancellationToken).ConfigureAwait(false);
                     Debug.Print($"HtmlLink={updatedEvent.HtmlLink}");
                 }
                 else
                 {
                     var eventItem = CalendarExporter.CreateEvent(date, summary);
-                    var createdEvent = await this.InsertEventAsync(service, eventItem, taskCancellationToken)
-                        .ConfigureAwait(false);
+                    var createdEvent = await this.InsertEventAsync(service, eventItem, taskCancellationToken).ConfigureAwait(false);
                     Debug.Print($"HtmlLink={createdEvent.HtmlLink}");
                 }
             }
@@ -213,8 +210,8 @@ namespace CompanyCalendar.Exporter.Google
         {
             var request = new EventsResource.ListRequest(service, this._options.CalendarId)
             {
-                TimeMin = DateTime.Today.ToFirstDayInMonth(),
-                TimeMax = DateTime.Today.ToLastDayInMonth(),
+                TimeMinDateTimeOffset = DateTime.Today.ToFirstDayInMonth(),
+                TimeMaxDateTimeOffset = DateTime.Today.ToLastDayInMonth(),
                 ShowDeleted = false,
                 SingleEvents = true,
                 OrderBy = EventsResource.ListRequest.OrderByEnum.StartTime,
@@ -222,9 +219,9 @@ namespace CompanyCalendar.Exporter.Google
             var events = await request.ExecuteAsync().ConfigureAwait(false);
             foreach (var eventItem in events.Items)
             {
-                var lowerDateTime = eventItem.Start.DateTime ??
+                var lowerDateTime = eventItem.Start.DateTimeDateTimeOffset ??
                                     DateTime.Parse(eventItem.Start.Date, CultureInfo.InvariantCulture);
-                var upperDateTime = eventItem.End.DateTime ??
+                var upperDateTime = eventItem.End.DateTimeDateTimeOffset ??
                                     DateTime.Parse(eventItem.End.Date, CultureInfo.InvariantCulture);
 
                 Debug.Print($"{lowerDateTime} to {upperDateTime} {eventItem.Summary}");
@@ -245,8 +242,8 @@ namespace CompanyCalendar.Exporter.Google
         {
             var request = new EventsResource.ListRequest(service, this._options.CalendarId)
             {
-                TimeMin = eventDateTime.Date,
-                TimeMax = eventDateTime.Date.ToNextDay(),
+                TimeMinDateTimeOffset = eventDateTime.Date,
+                TimeMaxDateTimeOffset = eventDateTime.Date.ToNextDay(),
                 ShowDeleted = false,
                 SingleEvents = true,
                 OrderBy = EventsResource.ListRequest.OrderByEnum.StartTime,

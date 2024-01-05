@@ -37,7 +37,7 @@ namespace CompanyCalendar.Importer.MsSql
                 .AddDbContext<AppDbContext>(
                     options =>
                     {
-                        var dbLoaderOptions = configuration.GetSection(DbLoaderOptions.Key).Get<DbLoaderOptions>();
+                        var dbLoaderOptions = configuration.GetSection(DbLoaderOptions.Key).Get<DbLoaderOptions>() ?? new DbLoaderOptions();
 
                         options.UseSqlServer(
                             dbLoaderOptions.ConnectionString,

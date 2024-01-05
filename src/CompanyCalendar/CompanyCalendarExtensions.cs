@@ -5,6 +5,8 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Collections.ObjectModel;
+
 namespace CompanyCalendar
 {
     /// <summary>
@@ -153,7 +155,7 @@ namespace CompanyCalendar
         /// <param name="lowerDate">開始日付。</param>
         /// <param name="upperDate">終了日付。</param>
         /// <returns><see cref="DateTime" /> と <see cref="HolidayKind" /> のタプルコレクション。</returns>
-        private static IReadOnlyCollection<(DateTime Date, HolidayKind IrregularKind)> ToIrregularPairsCore(
+        private static ReadOnlyCollection<(DateTime Date, HolidayKind IrregularKind)> ToIrregularPairsCore(
             this IDictionary<DateTime, HolidayItem> holidayItemsMapping,
             DateTime? lowerDate,
             DateTime? upperDate)

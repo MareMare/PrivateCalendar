@@ -27,9 +27,9 @@ namespace CompanyCalendar.Tests.Importer.MsSql
         [MemberData(nameof(LoadAsync_Range_TestDate))]
         public async Task LoadAsync_Range_Test(DateTime? lowerDate, DateTime? upperDate, int? expected)
         {
-            await using var context = CreateAppDbContext();
+            await using var context = this.CreateAppDbContext();
             var loader = new DbLoader(context);
-            var items = await loader.LoadAsync(lowerDate, upperDate).ToListAsync().ConfigureAwait(false);
+            var items = await loader.LoadAsync(lowerDate, upperDate).ToListAsync().ConfigureAwait(true);
 
             Assert.Equal(expected, items.Count);
         }

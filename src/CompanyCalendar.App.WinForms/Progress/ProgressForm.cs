@@ -111,9 +111,12 @@ public partial class ProgressForm : Form
     private void ProgressForm_Load(object sender, EventArgs e)
     {
         this.StartPosition = FormStartPosition.Manual;
-        this.Location = new Point(
-            this.Owner.Location.X + ((this.Owner.Width - this.Width) / 2),
-            this.Owner.Location.Y + ((this.Owner.Height - this.Height) / 2));
+        if (this.Owner != null)
+        {
+            this.Location = new Point(
+                this.Owner.Location.X + ((this.Owner.Width - this.Width) / 2),
+                this.Owner.Location.Y + ((this.Owner.Height - this.Height) / 2));
+        }
     }
 
     /// <summary>
@@ -126,7 +129,7 @@ public partial class ProgressForm : Form
     /// <summary>
     /// 進捗表示する範囲を表します。
     /// </summary>
-    private class ProgressFormScope : IProgressScope
+    private sealed class ProgressFormScope : IProgressScope
     {
         /// <summary><see cref="ProgressForm" /> を表します。</summary>
         private readonly ProgressForm _progressForm;

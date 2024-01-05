@@ -5,6 +5,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Collections.ObjectModel;
 using CompanyCalendar.App.WinForms.Progress;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -166,7 +167,7 @@ namespace CompanyCalendar.App.WinForms
         /// </summary>
         /// <param name="prefix">イベント概要の接頭語。</param>
         /// <returns>不定期イベントのコレクション。</returns>
-        private IReadOnlyCollection<(DateTime date, string summary)> GetEventPairs(string prefix)
+        private ReadOnlyCollection<(DateTime date, string summary)> GetEventPairs(string prefix)
         {
             var items = this.listBoxOfHolidayItems.Items.OfType<IrregularDisplayItem>().ToArray();
             var pairs = items
@@ -331,8 +332,9 @@ namespace CompanyCalendar.App.WinForms
 
             var irregularItems = holidayItems
                 .ToIrregularPairs()
-                .Select(pair =>
-                    new IrregularDisplayItem(pair.Date, pair.IrregularKind))
+                .Select(
+                    pair =>
+                        new IrregularDisplayItem(pair.Date, pair.IrregularKind))
                 .OfType<object>()
                 .ToArray();
 
@@ -375,7 +377,7 @@ namespace CompanyCalendar.App.WinForms
         /// <summary>
         /// リストボックス項目を表します。
         /// </summary>
-        private class IrregularDisplayItem
+        private sealed class IrregularDisplayItem
         {
             /// <summary>
             /// <see cref="IrregularDisplayItem" /> クラスの新しいインスタンスを初期化します。

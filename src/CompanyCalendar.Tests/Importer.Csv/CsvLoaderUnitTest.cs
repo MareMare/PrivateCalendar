@@ -16,7 +16,7 @@ namespace CompanyCalendar.Tests.Importer.Csv
 
         public CsvLoaderUnitTest(ITestOutputHelper testOutputHelper)
         {
-            _testOutputHelper = testOutputHelper;
+            this._testOutputHelper = testOutputHelper;
         }
 
         [Fact]
@@ -46,13 +46,13 @@ namespace CompanyCalendar.Tests.Importer.Csv
         }
 
         [Theory]
-        [MemberData(nameof(LoadAsync_Range_TestDate))]
+        [MemberData(nameof(CsvLoaderUnitTest.LoadAsync_Range_TestDate))]
         public async Task LoadAsync_Range_Test(DateTime? lowerDate, DateTime? upperDate, int? expected)
         {
             var path = "Sample.csv";
             var options = Options.Create(new CsvLoaderOptions());
             var loader = new CsvLoader(options);
-            var items = await loader.LoadAsync(path, lowerDate, upperDate).ToListAsync().ConfigureAwait(false);
+            var items = await loader.LoadAsync(path, lowerDate, upperDate).ToListAsync().ConfigureAwait(true);
 
             Assert.Equal(expected, items.Count);
         }
@@ -74,7 +74,7 @@ namespace CompanyCalendar.Tests.Importer.Csv
             var path = "not_found.csv";
             var options = Options.Create(new CsvLoaderOptions());
             var loader = new CsvLoader(options);
-            var _ = await Assert.ThrowsAsync<FileNotFoundException>(async () => await loader.LoadAsync(path).FirstAsync().ConfigureAwait(false));
+            var _ = await Assert.ThrowsAsync<FileNotFoundException>(async () => await loader.LoadAsync(path).FirstAsync().ConfigureAwait(true));
         }
 
         [Fact]
@@ -84,7 +84,7 @@ namespace CompanyCalendar.Tests.Importer.Csv
             var options = Options.Create(new CsvLoaderOptions());
             var loader = new CsvLoader(options);
 
-            var loadedItemsMapping = await loader.LoadAsync(path).ToDictionaryAsync(item => item.Date).ConfigureAwait(false);
+            var loadedItemsMapping = await loader.LoadAsync(path).ToDictionaryAsync(item => item.Date).ConfigureAwait(true);
             var lowerDate = loadedItemsMapping.Keys.Min().ToFirstDayInMonth();
             var upperDate = loadedItemsMapping.Keys.Max().ToLastDayInMonth();
 
@@ -92,9 +92,9 @@ namespace CompanyCalendar.Tests.Importer.Csv
             Assert.Equal(DateTime.Parse("2023/03/31"), upperDate);
 
             var query = loadedItemsMapping.ToIrregularPairs(lowerDate, upperDate);
-            foreach (var pair in query)
+            foreach (var (date, irregularKind) in query)
             {
-                _testOutputHelper.WriteLine($"Date={pair.Date:yyyy/MM/dd} IrregularKind={pair.IrregularKind}");
+                this._testOutputHelper.WriteLine($"Date={date:yyyy/MM/dd} IrregularKind={irregularKind}");
             }
         }
    }

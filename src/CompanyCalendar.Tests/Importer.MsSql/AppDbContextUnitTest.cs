@@ -21,7 +21,7 @@ namespace CompanyCalendar.Tests.Importer.MsSql
                 .AsNoTracking()
                 .OrderBy(item => item.Date)
                 .ToListAsync()
-                .ConfigureAwait(false);
+                .ConfigureAwait(true);
 
             Assert.NotNull(items);
             Assert.Equal(4, items.Count);

@@ -84,7 +84,7 @@ namespace CompanyCalendar.Importer.Csv
         /// <param name="csv"><see cref="IReader" />。</param>
         /// <param name="taskCancellationToken"><see cref="CancellationToken" />。</param>
         /// <returns><typeparamref name="T" /> の非同期イテレーションを提供する列挙子。</returns>
-        private static IAsyncEnumerable<T> GetRecordsAsync<T>(IReader csv, CancellationToken taskCancellationToken)
+        private static IAsyncEnumerable<T> GetRecordsAsync<T>(CsvReader csv, CancellationToken taskCancellationToken)
             where T : new() =>
             csv.GetRecordsAsync<T>(taskCancellationToken);
 
@@ -92,7 +92,7 @@ namespace CompanyCalendar.Importer.Csv
         /// CSV ファイルのレコードを表します。
         /// </summary>
         [DebuggerDisplay("{Date}(Kind={Kind}) {Summary}")]
-        private class HolidayItemRecord
+        private sealed class HolidayItemRecord
         {
             /// <summary>
             /// 日付を取得または設定します。

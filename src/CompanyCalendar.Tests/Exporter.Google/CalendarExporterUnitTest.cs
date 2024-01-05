@@ -33,7 +33,7 @@ namespace CompanyCalendar.Tests.Exporter.Google
         [Fact]
         public async Task Test_Google_ExportAsync()
         {
-            var options = this._config.Get<CalendarExporterOptions>();
+            var options = this._config.Get<CalendarExporterOptions>() ?? new CalendarExporterOptions();
             options.CredentialKind = CredentialKind.ServiceAccount;
 
             var exporter = new CalendarExporter(Options.Create(options));
@@ -42,7 +42,7 @@ namespace CompanyCalendar.Tests.Exporter.Google
                 (DateTime.Today, "HSC Debug"),
                 (DateTime.Today, "HSC Debug"),
             };
-            await exporter.ExportAsync(pairs).ConfigureAwait(false);
+            await exporter.ExportAsync(pairs).ConfigureAwait(true);
         }
     }
 }

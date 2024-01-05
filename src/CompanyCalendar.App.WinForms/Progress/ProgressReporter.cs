@@ -10,7 +10,7 @@ namespace CompanyCalendar.App.WinForms.Progress;
 /// <summary>
 /// 進行状況の報告を提供します。
 /// </summary>
-internal class ProgressReporter : Progress<ProgressInfo>, IProgressReporter
+internal sealed class ProgressReporter : Progress<ProgressInfo>, IProgressReporter
 {
     /// <summary>完了または失敗のレポートに対するデフォルトのタイムアウト時間を表します。</summary>
     private readonly TimeSpan _defaultTimeout;
@@ -66,7 +66,7 @@ internal class ProgressReporter : Progress<ProgressInfo>, IProgressReporter
     /// <see cref="ProgressInfoChanged" /> イベントを発生させます。
     /// </summary>
     /// <param name="e">イベントデータを格納している <see cref="ProgressInfoEventArgs" />。</param>
-    protected virtual void OnProgressInfoChanged(ProgressInfoEventArgs e) =>
+    private void OnProgressInfoChanged(ProgressInfoEventArgs e) =>
         this.ProgressInfoChanged?.Invoke(this, e);
 
     /// <summary>
