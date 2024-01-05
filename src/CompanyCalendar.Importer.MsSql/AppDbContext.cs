@@ -53,8 +53,9 @@ namespace CompanyCalendar.Importer.MsSql
 
             modelBuilder.Entity<HolidayItem>(entity =>
             {
-                entity.ToTable("CompanyHolidays")
-                    .HasComment("年間休日表")
+                entity.ToTable(
+                        "CompanyHolidays",
+                        t => t.HasComment("年間休日表"))
                     .HasKey(e => e.Date);
 
                 entity.Property(e => e.Date)
