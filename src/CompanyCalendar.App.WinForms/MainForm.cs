@@ -138,17 +138,17 @@ namespace CompanyCalendar.App.WinForms
         /// </summary>
         private void SetControlsEnabled()
         {
-            var enabled1 = this.radioButtonOfCsv.Checked;
-            var hasPath1 = !string.IsNullOrEmpty(this.textBoxOfCsvPath.Text);
-            this.textBoxOfCsvPath.Enabled = enabled1;
-            this.buttonToBrowseCsv.Enabled = enabled1;
-            this.buttonToLoad.Enabled = hasPath1;
+            var enabledOfCsv = this.radioButtonOfCsv.Checked;
+            var hasPathOfCsv = !string.IsNullOrEmpty(this.textBoxOfCsvPath.Text);
+            var enabledOfDb = this.radioButtonOfDb.Checked;
+            this.textBoxOfCsvPath.Enabled = enabledOfCsv;
+            this.buttonToBrowseCsv.Enabled = enabledOfCsv;
+            this.buttonToLoad.Enabled = (enabledOfCsv && hasPathOfCsv) || enabledOfDb;
 
-            var enabled2 = this.checkBoxOfIcs.Checked;
-            var hasPath2 = !string.IsNullOrEmpty(this.textBoxOfIcsPath.Text);
-            this.textBoxOfIcsPath.Enabled = enabled2;
-            this.buttonToBrowseIcs.Enabled = enabled2;
-            this.buttonToSave.Enabled = hasPath2;
+            var enabledOfIcs = this.checkBoxOfIcs.Checked;
+            this.textBoxOfIcsPath.Enabled = enabledOfIcs;
+            this.buttonToBrowseIcs.Enabled = enabledOfIcs;
+            this.buttonToSave.Enabled = this.listBoxOfHolidayItems.Items.Count > 0;
         }
 
         /// <summary>
