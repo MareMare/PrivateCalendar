@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google.Apis.Calendar.v3" Version="1.68.0.3592" />
+    <PackageReference Include="Google.Apis.Calendar.v3" Version="1.69.0.3667" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
   </ItemGroup>
 
