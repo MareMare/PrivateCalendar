@@ -10,7 +10,7 @@ namespace CompanyCalendar.App.WinForms.Progress;
 /// <summary>
 /// <see cref="IProgressReporter.ProgressInfoChanged" /> イベントのイベントデータを表します。
 /// </summary>
-public class ProgressInfoEventArgs : EventArgs
+internal sealed class ProgressInfoEventArgs : EventArgs
 {
     /// <summary>
     /// <see cref="ProgressInfoEventArgs" /> クラスの新しいインスタンスを初期化します。

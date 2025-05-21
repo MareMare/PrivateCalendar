@@ -14,7 +14,9 @@ namespace CompanyCalendar.App.WinForms
     /// <summary>
     /// メインフォームを表します。
     /// </summary>
-    public partial class MainForm : Form
+#pragma warning disable CA1812 // インスタンス化されない内部クラス
+    internal sealed partial class MainForm : Form
+#pragma warning disable CA1812 // インスタンス化されない内部クラス
     {
         /// <summary>非同期操作の実行時間としての最低時間を表します。</summary>
         private static readonly TimeSpan DelayTimeSpan = TimeSpan.FromSeconds(2);
@@ -66,7 +68,7 @@ namespace CompanyCalendar.App.WinForms
         /// <summary>
         /// <see cref="MainForm" /> クラスの新しいインスタンスを生成します。
         /// </summary>
-        protected MainForm()
+        private MainForm()
         {
             this.InitializeComponent();
             this.InitializeHandlers();
@@ -413,3 +415,4 @@ namespace CompanyCalendar.App.WinForms
         }
     }
 }
+#pragma warning restore CA1812 // インスタンス化されない内部クラス
