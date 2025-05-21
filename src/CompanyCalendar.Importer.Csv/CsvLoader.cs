@@ -56,23 +56,26 @@ namespace CompanyCalendar.Importer.Csv
             };
 
             var stream = File.Open(csvFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            await using var streamAsyncDisposable = stream.ConfigureAwait(false);
-            using var reader = new StreamReader(stream, encoding);
-            using var csv = new CsvReader(reader, csvConfig);
-            await foreach (var record in CsvLoader.GetRecordsAsync<HolidayItemRecord>(csv, taskCancellationToken).ConfigureAwait(false))
+            await using (stream.ConfigureAwait(false))
             {
-                var item = record.ToHolidayItem();
-                if (item is null)
+                using var reader = new StreamReader(stream, encoding);
+                using var csv = new CsvReader(reader, csvConfig);
+                var records = CsvLoader.GetRecordsAsync<HolidayItemRecord>(csv, taskCancellationToken);
+                await foreach (var record in records.ConfigureAwait(false))
                 {
-                    continue;
-                }
+                    var item = record.ToHolidayItem();
+                    if (item is null)
+                    {
+                        continue;
+                    }
 
-                var isOutOfRange = false;
-                isOutOfRange |= lowerDate.HasValue && item.Date < lowerDate.Value;
-                isOutOfRange |= upperDate.HasValue && item.Date > upperDate.Value;
-                if (!isOutOfRange)
-                {
-                    yield return item;
+                    var isOutOfRange = false;
+                    isOutOfRange |= lowerDate.HasValue && item.Date < lowerDate.Value;
+                    isOutOfRange |= upperDate.HasValue && item.Date > upperDate.Value;
+                    if (!isOutOfRange)
+                    {
+                        yield return item;
+                    }
                 }
             }
         }
