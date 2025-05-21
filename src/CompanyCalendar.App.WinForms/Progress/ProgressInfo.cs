@@ -10,7 +10,7 @@ namespace CompanyCalendar.App.WinForms.Progress;
 /// <summary>
 /// 進捗情報を表します。
 /// </summary>
-public class ProgressInfo
+internal sealed class ProgressInfo
 {
     /// <summary>
     /// <see cref="ProgressInfo" /> クラスの新しいインスタンスを生成します。

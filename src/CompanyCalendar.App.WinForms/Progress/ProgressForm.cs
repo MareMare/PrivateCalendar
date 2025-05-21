@@ -12,7 +12,9 @@ namespace CompanyCalendar.App.WinForms.Progress;
 /// <summary>
 /// 進捗画面のユーザーインターフェイスを構成するウィンドウを表します。
 /// </summary>
-public partial class ProgressForm : Form
+#pragma warning disable CA1812 // インスタンス化されない内部クラス
+internal sealed partial class ProgressForm : Form
+#pragma warning restore CA1812 // インスタンス化されない内部クラス
 {
     /// <summary><see cref="ILogger{T}" /> を表します。</summary>
     private readonly ILogger<ProgressForm> _logger;
