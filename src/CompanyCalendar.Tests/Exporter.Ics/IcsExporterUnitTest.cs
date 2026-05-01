@@ -19,7 +19,7 @@ namespace CompanyCalendar.Tests.Exporter.Ics
                 (DateTime.Today, "HSC でばっぐ１"),
                 (DateTime.Today.ToNextDay(), "HSC デバッグ２"),
             };
-            await exporter.ExportAsync(path, pairs).ConfigureAwait(true);
+            await exporter.ExportAsync(path, pairs, TestContext.Current.CancellationToken).ConfigureAwait(true);
         }
     }
 }

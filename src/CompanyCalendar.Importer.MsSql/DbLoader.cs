@@ -32,7 +32,7 @@ namespace CompanyCalendar.Importer.MsSql
         public IAsyncEnumerable<HolidayItem> LoadAsync(
             DateTime? lowerDate = null,
             DateTime? upperDate = null,
-            CancellationToken taskCancellationToken = default) =>
+            CancellationToken cancellationToken = default) =>
             this._dbContext.CompanyHolidays
                 .AsNoTracking()
                 .Where(item => !lowerDate.HasValue || item.Date >= lowerDate.Value)

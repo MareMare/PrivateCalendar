@@ -40,7 +40,7 @@ namespace CompanyCalendar.Importer.Csv
             string csvFilePath,
             DateTime? lowerDate = null,
             DateTime? upperDate = null,
-            [EnumeratorCancellation] CancellationToken taskCancellationToken = default)
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             var encoding = this._options.FileEncoding;
             var csvConfig = new CsvConfiguration(CultureInfo.CurrentCulture)
@@ -60,7 +60,7 @@ namespace CompanyCalendar.Importer.Csv
             {
                 using var reader = new StreamReader(stream, encoding);
                 using var csv = new CsvReader(reader, csvConfig);
-                var records = CsvLoader.GetRecordsAsync<HolidayItemRecord>(csv, taskCancellationToken);
+                var records = CsvLoader.GetRecordsAsync<HolidayItemRecord>(csv, cancellationToken);
                 await foreach (var record in records.ConfigureAwait(false))
                 {
                     var item = record.ToHolidayItem();
@@ -85,11 +85,11 @@ namespace CompanyCalendar.Importer.Csv
         /// </summary>
         /// <typeparam name="T">レコードの型。</typeparam>
         /// <param name="csv"><see cref="IReader" />。</param>
-        /// <param name="taskCancellationToken"><see cref="CancellationToken" />。</param>
+        /// <param name="cancellationToken"><see cref="CancellationToken" />。</param>
         /// <returns><typeparamref name="T" /> の非同期イテレーションを提供する列挙子。</returns>
-        private static IAsyncEnumerable<T> GetRecordsAsync<T>(CsvReader csv, CancellationToken taskCancellationToken)
+        private static IAsyncEnumerable<T> GetRecordsAsync<T>(CsvReader csv, CancellationToken cancellationToken)
             where T : new() =>
-            csv.GetRecordsAsync<T>(taskCancellationToken);
+            csv.GetRecordsAsync<T>(cancellationToken);
 
         /// <summary>
         /// CSV ファイルのレコードを表します。

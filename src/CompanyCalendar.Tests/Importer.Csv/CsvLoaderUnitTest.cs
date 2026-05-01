@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using CompanyCalendar.Importer.Csv;
 using Microsoft.Extensions.Options;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace CompanyCalendar.Tests.Importer.Csv
 {
@@ -27,7 +26,7 @@ namespace CompanyCalendar.Tests.Importer.Csv
             var loader = new CsvLoader(options);
 
             var items = new List<HolidayItem>();
-            await foreach (var item in loader.LoadAsync(path).ConfigureAwait(false))
+            await foreach (var item in loader.LoadAsync(path, cancellationToken: TestContext.Current.CancellationToken).ConfigureAwait(false))
             {
                 Assert.NotNull(item);
                 Assert.NotNull(item.Summary);
@@ -40,9 +39,9 @@ namespace CompanyCalendar.Tests.Importer.Csv
 
         public static IEnumerable<object?[]> LoadAsync_Range_TestDate()
         {
-            yield return new object?[] { DateTime.Parse("2023/03/04"), null, 9, };
-            yield return new object?[] { null, DateTime.Parse("2022/4/30"), 10, };
-            yield return new object?[] { DateTime.Parse("2022/6/6"), DateTime.Parse("2022/6/6"), 1, };
+            yield return [DateTime.Parse("2023/03/04"), null, 9];
+            yield return [null, DateTime.Parse("2022/4/30"), 10];
+            yield return [DateTime.Parse("2022/6/6"), DateTime.Parse("2022/6/6"), 1];
         }
 
         [Theory]
@@ -52,7 +51,13 @@ namespace CompanyCalendar.Tests.Importer.Csv
             var path = "Sample.csv";
             var options = Options.Create(new CsvLoaderOptions());
             var loader = new CsvLoader(options);
-            var items = await loader.LoadAsync(path, lowerDate, upperDate).ToListAsync().ConfigureAwait(true);
+            var items = await loader.LoadAsync(
+                    path,
+                    lowerDate,
+                    upperDate,
+                    TestContext.Current.CancellationToken)
+                .ToListAsync(TestContext.Current.CancellationToken)
+                .ConfigureAwait(true);
 
             Assert.Equal(expected, items.Count);
         }
@@ -64,7 +69,10 @@ namespace CompanyCalendar.Tests.Importer.Csv
             var options = Options.Create(new CsvLoaderOptions());
             var loader = new CsvLoader(options);
 
-            var e = loader.LoadAsync(path).GetAsyncEnumerator();
+            var e = loader.LoadAsync(
+                    path,
+                    cancellationToken: TestContext.Current.CancellationToken)
+                .GetAsyncEnumerator(TestContext.Current.CancellationToken);
             var _ = await Assert.ThrowsAsync<FileNotFoundException>(() => e.MoveNextAsync().AsTask());
         }
 
@@ -74,7 +82,12 @@ namespace CompanyCalendar.Tests.Importer.Csv
             var path = "not_found.csv";
             var options = Options.Create(new CsvLoaderOptions());
             var loader = new CsvLoader(options);
-            var _ = await Assert.ThrowsAsync<FileNotFoundException>(async () => await loader.LoadAsync(path).FirstAsync().ConfigureAwait(true));
+            var _ = await Assert.ThrowsAsync<FileNotFoundException>(async () =>
+                await loader.LoadAsync(
+                        path,
+                        cancellationToken: TestContext.Current.CancellationToken)
+                    .FirstAsync(TestContext.Current.CancellationToken)
+                    .ConfigureAwait(true));
         }
 
         [Fact]
@@ -84,7 +97,13 @@ namespace CompanyCalendar.Tests.Importer.Csv
             var options = Options.Create(new CsvLoaderOptions());
             var loader = new CsvLoader(options);
 
-            var loadedItemsMapping = await loader.LoadAsync(path).ToDictionaryAsync(item => item.Date).ConfigureAwait(true);
+            var loadedItemsMapping = await loader.LoadAsync(
+                    path,
+                    cancellationToken: TestContext.Current.CancellationToken)
+                .ToDictionaryAsync(
+                    item => item.Date,
+                    cancellationToken: TestContext.Current.CancellationToken)
+                .ConfigureAwait(true);
             var lowerDate = loadedItemsMapping.Keys.Min().ToFirstDayInMonth();
             var upperDate = loadedItemsMapping.Keys.Max().ToLastDayInMonth();
 
