@@ -1,0 +1,18 @@
+<Solution>
+  <Folder Name="/ソリューション項目/">
+    <File Path="../.gitignore" />
+    <File Path="../LICENSE" />
+    <File Path="../README.md" />
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="stylecop.json" />
+  </Folder>
+  <Project Path="CompanyCalendar.App.WinForms/CompanyCalendar.App.WinForms.csproj" />
+  <Project Path="CompanyCalendar.Exporter.Google/CompanyCalendar.Exporter.Google.csproj" />
+  <Project Path="CompanyCalendar.Exporter.Ics/CompanyCalendar.Exporter.Ics.csproj" />
+  <Project Path="CompanyCalendar.Hosting.WinForms/CompanyCalendar.Hosting.WinForms.csproj" />
+  <Project Path="CompanyCalendar.Importer.Csv/CompanyCalendar.Importer.Csv.csproj" />
+  <Project Path="CompanyCalendar.Importer.MsSql/CompanyCalendar.Importer.MsSql.csproj" />
+  <Project Path="CompanyCalendar.Tests/CompanyCalendar.Tests.csproj" />
+  <Project Path="CompanyCalendar/CompanyCalendar.csproj" />
+</Solution>

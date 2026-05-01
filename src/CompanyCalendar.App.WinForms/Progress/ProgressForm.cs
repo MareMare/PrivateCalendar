@@ -5,6 +5,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.ComponentModel;
 using Microsoft.Extensions.Logging;
 
 namespace CompanyCalendar.App.WinForms.Progress;
@@ -43,6 +44,7 @@ internal sealed partial class ProgressForm : Form
     /// 値を表す <see cref="string" /> 型。
     /// <para>タイトル。既定値は null です。</para>
     /// </value>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public string? Title
     {
         get => this.Text;
@@ -56,6 +58,7 @@ internal sealed partial class ProgressForm : Form
     /// 値を表す <see cref="string" /> 型。
     /// <para>メッセージ。既定値は null です。</para>
     /// </value>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public string? Message
     {
         get => this.labelMessage.Text;

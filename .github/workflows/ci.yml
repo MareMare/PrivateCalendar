@@ -15,7 +15,7 @@ on:
   
 env:
   CONFIGURATION: Release
-  DOTNET_CORE_VERSION: 8.0.x
+  DOTNET_CORE_VERSION: 10.0.x
   WORKING_DIRECTORY: src
   TESTING_DIRECTORY: src
   ApplicationName: ${{ secrets.APPLICATIONNAME }}
@@ -28,9 +28,9 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: 🛒 Checkout
-      uses: actions/checkout@v6
+      uses: actions/checkout@v6.0.2
     - name: ✨ Setup .NET
-      uses: actions/setup-dotnet@v5
+      uses: actions/setup-dotnet@v5.2.0
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
     - name: 🚚 Restore
