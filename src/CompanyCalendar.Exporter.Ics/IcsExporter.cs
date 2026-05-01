@@ -33,7 +33,7 @@ namespace CompanyCalendar.Exporter.Ics
         public async Task ExportAsync(
             string icsFilePath,
             IEnumerable<(DateTime date, string summary)> eventPairs,
-            CancellationToken taskCancellationToken = default)
+            CancellationToken cancellationToken = default)
         {
             // [asp\.net \- How to create \.ics file using c\#? \- Stack Overflow](https://stackoverflow.com/questions/46033843/how-to-create-ics-file-using-c/46042482#46042482)
             var pairs = eventPairs.Select(pair => (loweDate: pair.date, upperDate: pair.date.ToNextDay(), pair.summary))
@@ -48,10 +48,10 @@ namespace CompanyCalendar.Exporter.Ics
             var path = icsFilePath;
             var encoding = this._options.FileEncoding;
 
-            // await File.WriteAllTextAsync(path, ics, encoding, taskCancellationToken).ConfigureAwait(false);
+            // await File.WriteAllTextAsync(path, ics, encoding, cancellationToken).ConfigureAwait(false);
             using var stream = File.Open(path, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
             using var writer = new StreamWriter(stream, encoding);
-            await writer.WriteAsync(ics.AsMemory(), taskCancellationToken).ConfigureAwait(false);
+            await writer.WriteAsync(ics.AsMemory(), cancellationToken).ConfigureAwait(false);
         }
     }
 }

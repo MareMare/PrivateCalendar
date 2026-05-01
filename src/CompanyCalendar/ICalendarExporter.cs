@@ -16,10 +16,10 @@ namespace CompanyCalendar
         /// 非同期操作として、google カレンダへエクスポートします。
         /// </summary>
         /// <param name="eventPairs">不定期イベントのコレクション。</param>
-        /// <param name="taskCancellationToken"><see cref="CancellationToken" />。</param>
+        /// <param name="cancellationToken"><see cref="CancellationToken" />。</param>
         /// <returns>完了を表す <see cref="Task" />。</returns>
         Task ExportAsync(
             IEnumerable<(DateTime date, string summary)> eventPairs,
-            CancellationToken taskCancellationToken = default);
+            CancellationToken cancellationToken = default);
     }
 }

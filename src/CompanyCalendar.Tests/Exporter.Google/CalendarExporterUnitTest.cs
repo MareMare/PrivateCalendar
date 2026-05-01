@@ -42,7 +42,7 @@ namespace CompanyCalendar.Tests.Exporter.Google
                 (DateTime.Today, "HSC Debug"),
                 (DateTime.Today, "HSC Debug"),
             };
-            await exporter.ExportAsync(pairs).ConfigureAwait(true);
+            await exporter.ExportAsync(pairs, TestContext.Current.CancellationToken).ConfigureAwait(true);
         }
     }
 }

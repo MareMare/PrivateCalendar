@@ -48,24 +48,24 @@ namespace CompanyCalendar.Exporter.Google
         /// <inheritdoc />
         public async Task ExportAsync(
             IEnumerable<(DateTime date, string summary)> eventPairs,
-            CancellationToken taskCancellationToken = default)
+            CancellationToken cancellationToken = default)
         {
             ArgumentNullException.ThrowIfNull(eventPairs);
 
-            using var service = await this.CreateCalendarServiceAsync(taskCancellationToken).ConfigureAwait(false);
+            using var service = await this.CreateCalendarServiceAsync(cancellationToken).ConfigureAwait(false);
             foreach (var (date, summary) in eventPairs)
             {
-                var existingEvent = await this.FindEventAsync(service, date, taskCancellationToken).ConfigureAwait(false);
+                var existingEvent = await this.FindEventAsync(service, date, cancellationToken).ConfigureAwait(false);
                 if (existingEvent != null)
                 {
                     CalendarExporter.UpdateEvent(existingEvent, date, summary);
-                    var updatedEvent = await this.UpdateEventAsync(service, existingEvent, taskCancellationToken).ConfigureAwait(false);
+                    var updatedEvent = await this.UpdateEventAsync(service, existingEvent, cancellationToken).ConfigureAwait(false);
                     Debug.Print($"HtmlLink={updatedEvent.HtmlLink}");
                 }
                 else
                 {
                     var eventItem = CalendarExporter.CreateEvent(date, summary);
-                    var createdEvent = await this.InsertEventAsync(service, eventItem, taskCancellationToken).ConfigureAwait(false);
+                    var createdEvent = await this.InsertEventAsync(service, eventItem, cancellationToken).ConfigureAwait(false);
                     Debug.Print($"HtmlLink={createdEvent.HtmlLink}");
                 }
             }
@@ -120,10 +120,10 @@ namespace CompanyCalendar.Exporter.Google
         /// <summary>
         /// 非同期操作として、<see cref="CalendarService" /> を生成します。
         /// </summary>
-        /// <param name="taskCancellationToken"><see cref="CancellationToken" />。</param>
+        /// <param name="cancellationToken"><see cref="CancellationToken" />。</param>
         /// <returns><see cref="CalendarService" />。</returns>
         private async Task<CalendarService> CreateCalendarServiceAsync(
-            CancellationToken taskCancellationToken = default)
+            CancellationToken cancellationToken = default)
         {
             switch (this._options.CredentialKind)
             {
@@ -151,7 +151,7 @@ namespace CompanyCalendar.Exporter.Google
                 case CredentialKind.OAuth:
                 default:
                 {
-                    var credential = await this.CreateOAuthCredentialAsync(taskCancellationToken).ConfigureAwait(false);
+                    var credential = await this.CreateOAuthCredentialAsync(cancellationToken).ConfigureAwait(false);
                     var initializer = new BaseClientService.Initializer // OAuth2.0 での認証
                     {
                         ApplicationName = this._options.ApplicationName,
@@ -165,10 +165,10 @@ namespace CompanyCalendar.Exporter.Google
         /// <summary>
         /// OAuth 2.0 での <see cref="ICredential" /> を生成します。
         /// </summary>
-        /// <param name="taskCancellationToken"><see cref="CancellationToken" />。</param>
+        /// <param name="cancellationToken"><see cref="CancellationToken" />。</param>
         /// <returns><see cref="ICredential" />。</returns>
         private async Task<ICredential> CreateOAuthCredentialAsync(
-            CancellationToken taskCancellationToken = default)
+            CancellationToken cancellationToken = default)
         {
             // OAuth 2.0 で対話形式の認証を行います。
             var clientSecrets = new ClientSecrets
@@ -180,7 +180,7 @@ namespace CompanyCalendar.Exporter.Google
                     clientSecrets,
                     CalendarExporter.Scopes,
                     "user",
-                    taskCancellationToken)
+                    cancellationToken)
                 .ConfigureAwait(false);
             return credential;
         }
@@ -233,12 +233,12 @@ namespace CompanyCalendar.Exporter.Google
         /// </summary>
         /// <param name="service"><see cref="IClientService" />。</param>
         /// <param name="eventDateTime">イベント日付。</param>
-        /// <param name="taskCancellationToken"><see cref="CancellationToken" />。</param>
+        /// <param name="cancellationToken"><see cref="CancellationToken" />。</param>
         /// <returns>見つかった <see cref="Event" />。見つからない場合は <see langword="null" />。</returns>
         private async Task<Event?> FindEventAsync(
             IClientService service,
             DateTime eventDateTime,
-            CancellationToken taskCancellationToken = default)
+            CancellationToken cancellationToken = default)
         {
             var request = new EventsResource.ListRequest(service, this._options.CalendarId)
             {
@@ -249,7 +249,7 @@ namespace CompanyCalendar.Exporter.Google
                 OrderBy = EventsResource.ListRequest.OrderByEnum.StartTime,
             };
 
-            var events = await request.ExecuteAsync(taskCancellationToken).ConfigureAwait(false);
+            var events = await request.ExecuteAsync(cancellationToken).ConfigureAwait(false);
             var foundEventItem = events.Items.FirstOrDefault(item =>
                 item.Summary.StartsWith("HSC", StringComparison.InvariantCulture));
             return foundEventItem;
@@ -260,15 +260,15 @@ namespace CompanyCalendar.Exporter.Google
         /// </summary>
         /// <param name="service"><see cref="IClientService" />。</param>
         /// <param name="eventItem">イベント。</param>
-        /// <param name="taskCancellationToken"><see cref="CancellationToken" />。</param>
+        /// <param name="cancellationToken"><see cref="CancellationToken" />。</param>
         /// <returns>追加された <see cref="Event" />。</returns>
         private async Task<Event> InsertEventAsync(
             IClientService service,
             Event eventItem,
-            CancellationToken taskCancellationToken = default)
+            CancellationToken cancellationToken = default)
         {
             var request = new EventsResource.InsertRequest(service, eventItem, this._options.CalendarId);
-            var createdEvent = await request.ExecuteAsync(taskCancellationToken).ConfigureAwait(false);
+            var createdEvent = await request.ExecuteAsync(cancellationToken).ConfigureAwait(false);
             return createdEvent;
         }
 
@@ -277,15 +277,15 @@ namespace CompanyCalendar.Exporter.Google
         /// </summary>
         /// <param name="service"><see cref="IClientService" />。</param>
         /// <param name="eventItem">イベント。</param>
-        /// <param name="taskCancellationToken"><see cref="CancellationToken" />。</param>
+        /// <param name="cancellationToken"><see cref="CancellationToken" />。</param>
         /// <returns>更新された <see cref="Event" />。</returns>
         private async Task<Event> UpdateEventAsync(
             IClientService service,
             Event eventItem,
-            CancellationToken taskCancellationToken = default)
+            CancellationToken cancellationToken = default)
         {
             var request = new EventsResource.UpdateRequest(service, eventItem, this._options.CalendarId, eventItem.Id);
-            var updatedEvent = await request.ExecuteAsync(taskCancellationToken).ConfigureAwait(false);
+            var updatedEvent = await request.ExecuteAsync(cancellationToken).ConfigureAwait(false);
             return updatedEvent;
         }
     }

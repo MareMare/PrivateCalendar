@@ -4,7 +4,7 @@ using CompanyCalendar.Importer.MsSql;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Xunit.Abstractions;
+using Xunit;
 
 namespace CompanyCalendar.Tests.Importer.MsSql
 {

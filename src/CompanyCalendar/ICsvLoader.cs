@@ -18,12 +18,12 @@ namespace CompanyCalendar
         /// <param name="csvFilePath">CSV ファイルのパス。</param>
         /// <param name="lowerDate">読み込む開始日付。</param>
         /// <param name="upperDate">読み込む終了日付。</param>
-        /// <param name="taskCancellationToken"><see cref="CancellationToken" />。</param>
+        /// <param name="cancellationToken"><see cref="CancellationToken" />。</param>
         /// <returns><see cref="HolidayItem" /> の非同期イテレーションを提供する列挙子。</returns>
         IAsyncEnumerable<HolidayItem> LoadAsync(
             string csvFilePath,
             DateTime? lowerDate = null,
             DateTime? upperDate = null,
-            CancellationToken taskCancellationToken = default);
+            CancellationToken cancellationToken = default);
     }
 }

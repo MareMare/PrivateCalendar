@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace CompanyCalendar.Tests.Importer.MsSql
 {
@@ -20,7 +19,7 @@ namespace CompanyCalendar.Tests.Importer.MsSql
             var items = await context.CompanyHolidays
                 .AsNoTracking()
                 .OrderBy(item => item.Date)
-                .ToListAsync()
+                .ToListAsync(TestContext.Current.CancellationToken)
                 .ConfigureAwait(true);
 
             Assert.NotNull(items);
