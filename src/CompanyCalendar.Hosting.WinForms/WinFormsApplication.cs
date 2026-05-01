@@ -8,6 +8,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+#pragma warning disable CA1873
 
 namespace CompanyCalendar.Hosting.WinForms
 {
